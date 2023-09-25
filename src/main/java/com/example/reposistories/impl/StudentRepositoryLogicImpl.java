@@ -5,6 +5,7 @@ import com.example.domain.model.Student;
 import com.example.exceptions.UniversityException;
 import com.example.reposistories.Repository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

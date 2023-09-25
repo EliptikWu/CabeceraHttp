@@ -6,8 +6,8 @@ import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
 import com.example.services.impl.StudentServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletInputStream;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet({"/student.json"})
-public class StudentJson extends HttpServlet {
+@WebFilter({"/public/students"})
+public class StudentJson extends HttpServlet implements Filter {
 
     public StudentRepositoryLogicImpl student;
     public StudentService service;
@@ -60,6 +61,11 @@ public class StudentJson extends HttpServlet {
         String json = mapper.writeValueAsString(students);
         resp.setContentType("application/json");
         resp.getWriter().write(json);
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
     }
 }
 

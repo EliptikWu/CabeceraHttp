@@ -1,8 +1,7 @@
 package com.example.controllers;
 
-import com.example.services.LoginService;
-import com.example.services.impl.LoginServiceImpl;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -11,10 +10,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Optional;
+
 
 @WebServlet("/login")
-public class Login extends HttpServlet {
+@WebFilter({"/private/login"})
+public class LoginServlet extends HttpServlet implements Filter {
     final static String USERNAME = "admin";
     final static String PASSWORD = "12345";
     @Override
@@ -23,9 +23,6 @@ public class Login extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         if (USERNAME.equals(username) && PASSWORD.equals(password)) {
-            Cookie usernameCookie = new Cookie("username", username);
-            resp.addCookie(usernameCookie);
-            resp.sendRedirect(req.getContextPath() + "/login.html");
             resp.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = resp.getWriter()) {
                 out.println("<!DOCTYPE html>");
@@ -45,5 +42,9 @@ public class Login extends HttpServlet {
                     "para ingresar a esta página!");
         }
     }
-}
 
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+    }
+}
