@@ -4,7 +4,8 @@ import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
 import com.example.services.impl.StudentServiceImpl;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,9 +13,11 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+/**Public Access**/
 
 @WebServlet(name = "studentController", value = "/student-form")
-public class StudentController extends HttpServlet {
+@WebFilter({"/public/students"})
+public class StudentController extends HttpServlet implements Filter {
 
     private StudentRepositoryLogicImpl studentRepository;
     private StudentService service;
@@ -70,6 +73,11 @@ public class StudentController extends HttpServlet {
             out.println("    </body>");
             out.println("</html>");
         }
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
     }
 
     public void destroy() {

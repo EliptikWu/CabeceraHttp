@@ -4,7 +4,8 @@ import com.example.domain.model.Subject;
 import com.example.reposistories.impl.SubjectRepositoryLogicImpl;
 import com.example.services.SubjectService;
 import com.example.services.impl.SubjectServiceImpl;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +15,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(name = "subjectController", value = "/subject-form")
-public class SubjectController extends HttpServlet {
+@WebFilter({"/public/subject"})
+public class SubjectController extends HttpServlet implements Filter {
 
     private SubjectRepositoryLogicImpl subjectRepository;
     private SubjectService service;
@@ -68,6 +70,11 @@ public class SubjectController extends HttpServlet {
             out.println("    </body>");
             out.println("</html>");
         }
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
     }
 
     public void destroy() {

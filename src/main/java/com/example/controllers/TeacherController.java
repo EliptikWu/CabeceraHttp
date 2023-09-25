@@ -4,7 +4,7 @@ import com.example.domain.model.Teacher;
 import com.example.reposistories.impl.TeacherRepositoryLogicImpl;
 import com.example.services.TeacherService;
 import com.example.services.impl.TeacherServiceImpl;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @WebServlet(name = "teacherController", value = "/teacher-form")
-public class TeacherController extends HttpServlet {
+public class TeacherController extends HttpServlet implements Filter {
 
     private TeacherRepositoryLogicImpl teacherRepository;
     private TeacherService service;
@@ -68,6 +68,11 @@ public class TeacherController extends HttpServlet {
             out.println("    </body>");
             out.println("</html>");
         }
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
     }
 
     public void destroy() {

@@ -6,7 +6,8 @@ import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
 import com.example.services.impl.StudentServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,8 @@ import java.util.List;
 
 
 @WebServlet({"/students.xls", "/students.html", "/students"})
-public class StudentXLS extends HttpServlet {
+@WebFilter({"/public/students"})
+public class StudentXLS extends HttpServlet implements Filter {
     private StudentRepositoryLogicImpl student;
     private StudentService service;
     public StudentXLS() {
@@ -71,4 +73,8 @@ public class StudentXLS extends HttpServlet {
         }
     }
 
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
+    }
 }

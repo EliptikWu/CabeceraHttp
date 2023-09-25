@@ -1,6 +1,7 @@
 package com.example.controllers;
 
-import jakarta.servlet.ServletException;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +16,8 @@ import java.time.format.DateTimeFormatter;
 // object to format the time in a specific format ("hh:mm:ss")
 
 @WebServlet({"/reloj.json"})
-public class Reloj extends HttpServlet {
+@WebFilter({"/public/reloj"})
+public class Reloj extends HttpServlet implements Filter {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException {
         resp.setContentType("text/html;charset=UTF-8");
@@ -35,5 +37,10 @@ public class Reloj extends HttpServlet {
             out.println(" </body>");
             out.println("</html>");
         }
+    }
+
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+
     }
 }
