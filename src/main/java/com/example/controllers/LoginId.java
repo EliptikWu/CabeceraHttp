@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.domain.mapping.dto.StudentDto;
 import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
@@ -13,7 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Optional;
 
+/**Private Access**/
 @WebServlet("/loginId")
 @WebFilter({"/private/login"})
 public class LoginId extends HttpServlet implements Filter {
@@ -28,27 +31,41 @@ public class LoginId extends HttpServlet implements Filter {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException {
-        Long id = Long.valueOf(req.getParameter("id"));
-        Student student = studentRepository.porId(id);
-        if (student != null) {
-            resp.setContentType("text/html;charset=UTF-8");
-            try (PrintWriter out = resp.getWriter()) {
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println(" <head>");
-                out.println(" <meta charset=\"UTF-8\">");
-                out.println(" <title>Found successfully</title>");
-                out.println(" </head>");
-                out.println(" <body>");
-                out.println(" <h1>Found successfully!</h1>");
-                out.println(" <h3>Hello "+ id + " you have found successfully!</h3>");
-                out.println(" </body>");
-                out.println("</html>");
+        Long id = null;
+        String studentIdStr = request.getParameter("studentId");
+
+        if (studentIdStr != null && !studentIdStr.isEmpty()) {
+            try {
+                idstudent = Long.parseLong(studentIdStr);
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid student ID");
+                return;
             }
         } else {
-            resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Lo sentimos no esta autorizado " +
-                    "para ingresar a esta página!");
+            response.setContentType("text/html");
+            response.getWriter().println("<h1>Please enter a student ID.</h1>");
+            return;
         }
+
+        Optional<Student> studentOptional = Optional.ofNullable(service.porId(id));
+
+        if (studentOptional.isPresent()) {
+            Student student = studentOptional.get();
+            response.setContentType("text/html");
+            response.getWriter().println("<p>ID: " + student.id() + "</p>");
+            response.getWriter().println("<p>Nombre: " + student.name() + "</p>");
+            response.getWriter().println("<p>Correo: " + student.email() + "</p>");
+            response.getWriter().println("<p>Semestre: " + student.semester() + "</p>");
+
+        } else {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Student not found");
+        }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Test");
+
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
 
 //works by giving the current time using the LocalTime class system and creates a DateTimeFormatter
 // object to format the time in a specific format ("hh:mm:ss")
-
+/**Public Access**/
 @WebServlet({"/reloj.json"})
 @WebFilter({"/public/reloj"})
 public class Reloj extends HttpServlet implements Filter {

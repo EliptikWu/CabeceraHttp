@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
+/**Public Access**/
 @WebServlet(name = "subjectController", value = "/subject-form")
 @WebFilter({"/public/subject"})
 public class SubjectController extends HttpServlet implements Filter {

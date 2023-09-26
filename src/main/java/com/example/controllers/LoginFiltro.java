@@ -9,10 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Optional;
-
-@WebFilter({"/student"})//urls que deseamos aplique el filtro
-    //si queremos implementar varias pondriamos:
-    //@WebFilter({"/students", “/teachers”,”subjects”})
+/**Private Access**/
+@WebFilter({"/private/students"})
 public class LoginFiltro implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain

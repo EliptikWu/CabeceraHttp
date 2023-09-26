@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Optional;
+/**Private Access**/
 @WebServlet("/loginSession")
 @WebFilter({"/private/login"})
 class LoginSessionServlet extends HttpServlet implements Filter {

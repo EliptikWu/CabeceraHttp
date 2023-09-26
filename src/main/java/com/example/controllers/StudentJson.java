@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-
+/**Public Access**/
 @WebServlet({"/student.json"})
 @WebFilter({"/public/students"})
 public class StudentJson extends HttpServlet implements Filter {

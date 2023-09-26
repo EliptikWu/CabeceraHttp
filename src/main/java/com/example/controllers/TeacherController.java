@@ -5,6 +5,7 @@ import com.example.reposistories.impl.TeacherRepositoryLogicImpl;
 import com.example.services.TeacherService;
 import com.example.services.impl.TeacherServiceImpl;
 import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,8 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
+/**Public Access**/
 @WebServlet(name = "teacherController", value = "/teacher-form")
+@WebFilter({"/public/teacher"})
 public class TeacherController extends HttpServlet implements Filter {
 
     private TeacherRepositoryLogicImpl teacherRepository;

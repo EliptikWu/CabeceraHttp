@@ -1,4 +1,4 @@
-/**package connection;
+package connection;
 
 import com.example.exceptions.ServiceJdbcException;
 import jakarta.servlet.*;
@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
 @WebFilter("/*")
 public class ConnectionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain
             chain) throws IOException, ServletException {
-        try (Connection conn = ConnectionDB.getConnection()) {
+        try (Connection conn = ConnectionDB.getInstance()) {
             if (conn.getAutoCommit()) {
                 conn.setAutoCommit(false);
             }
@@ -24,12 +25,15 @@ public class ConnectionFilter implements Filter {
                 conn.commit();
             } catch (SQLException | ServiceJdbcException e) {
                 conn.rollback();
-                ((HttpServletResponse)response).sendError(HttpServletResponse
+                ((HttpServletResponse) response).sendError(HttpServletResponse
                         .SC_INTERNAL_SERVER_ERROR, e.getMessage());
                 e.printStackTrace();
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
+
     }
-}**/
+}
