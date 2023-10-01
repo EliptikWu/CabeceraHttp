@@ -16,8 +16,7 @@ import java.time.format.DateTimeFormatter;
 // object to format the time in a specific format ("hh:mm:ss")
 /**Public Access**/
 @WebServlet({"/reloj.json"})
-@WebFilter({"/public/reloj"})
-public class Reloj extends HttpServlet implements Filter {
+public class Reloj extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException,
             IOException {
         resp.setContentType("text/html;charset=UTF-8");
@@ -37,10 +36,5 @@ public class Reloj extends HttpServlet implements Filter {
             out.println(" </body>");
             out.println("</html>");
         }
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 }

@@ -13,8 +13,7 @@ import java.io.PrintWriter;
 
 /**Private Access**/
 @WebServlet("/login")
-@WebFilter({"/private/login"})
-public class LoginServlet extends HttpServlet implements Filter {
+public class LoginServlet extends HttpServlet{
     final static String USERNAME = "admin";
     final static String PASSWORD = "12345";
     @Override
@@ -41,10 +40,5 @@ public class LoginServlet extends HttpServlet implements Filter {
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Lo sentimos no esta autorizado " +
                     "para ingresar a esta página!");
         }
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 }

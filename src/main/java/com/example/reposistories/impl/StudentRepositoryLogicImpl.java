@@ -1,15 +1,15 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.StudentDto;
+import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.exceptions.UniversityException;
 import com.example.reposistories.Repository;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentRepositoryLogicImpl implements Repository<Student> {
+public class StudentRepositoryLogicImpl implements Repository<StudentDto> {
     private List<Student> students;
 
     public StudentRepositoryLogicImpl() {
@@ -20,25 +20,29 @@ public class StudentRepositoryLogicImpl implements Repository<Student> {
     }
 
     @Override
-    public List<Student> listar() {
-        return students;
+    public List<StudentDto> list() {
+        return StudentMapper.mapFrom(students);
     }
 
     @Override
-    public Student porId(Long id) {
+    public StudentDto byId(Long id) {
         return students.stream()
-                .filter(e->id.equals(e.getId()))
+                .filter(e->e.getId() == (e.getId()))
                 .findFirst()
+                .map(StudentMapper::mapFrom)
                 .orElseThrow(()-> new UniversityException("Student not found"));
     }
 
     @Override
-    public void guardar(Student student) {
-        students.add(student);
+    public void update(StudentDto student) {
+        StudentMapper.mapFrom(students);
+
     }
 
     @Override
-    public void eliminar(Long id) {
-        students.removeIf(e->e.getId().equals(id));
+    public void delete(Long id) {
+        StudentMapper.mapFrom(students);
+
     }
+
 }

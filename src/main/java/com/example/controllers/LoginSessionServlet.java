@@ -15,8 +15,7 @@ import java.io.PrintWriter;
 import java.util.Optional;
 /**Private Access**/
 @WebServlet("/loginSession")
-@WebFilter({"/private/login"})
-class LoginSessionServlet extends HttpServlet implements Filter {
+class LoginSessionServlet extends HttpServlet{
     final static String USERNAME = "admin";
     final static String PASSWORD = "12345";
     @Override
@@ -67,8 +66,5 @@ class LoginSessionServlet extends HttpServlet implements Filter {
     }
 
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-    }
 }

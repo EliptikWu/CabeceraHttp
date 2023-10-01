@@ -4,9 +4,7 @@ import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
 import com.example.services.impl.StudentServiceImpl;
-import com.sun.jdi.connect.spi.Connection;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,8 +15,7 @@ import java.io.PrintWriter;
 /**Public Access**/
 
 @WebServlet(name = "studentController", value = "/student-form")
-@WebFilter({"/public/students"})
-public class StudentController extends HttpServlet implements Filter {
+public class StudentController extends HttpServlet{
 
     private StudentRepositoryLogicImpl studentRepository;
     private StudentService service;
@@ -30,11 +27,7 @@ public class StudentController extends HttpServlet implements Filter {
 
     private String message;
 
-    public void init() {
-        message = "Hello World!";
-    }
-
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws
+/**    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws
             ServletException, IOException {
         Connection conn = (Connection) req.getAttribute("conn");
         StudentService service = new StudentServiceImpl(conn);
@@ -46,7 +39,7 @@ public class StudentController extends HttpServlet implements Filter {
         out.println("<h1>Students</h1>");
         out.println(service.listar());
         out.println("</body></html>");
-    }
+    }**/
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,9 +48,9 @@ public class StudentController extends HttpServlet implements Filter {
         String name = req.getParameter("name");
         String semester = req.getParameter("semester");
         String email = req.getParameter("email");
-        Student student = new Student(4L, name,semester,email);
-        service.guardar(student);
-        System.out.println(service.listar());
+        Student student = new Student(4L, name,semester,email,"","");
+        service.update(student);
+        System.out.println(service.list());
 
         try (PrintWriter out = resp.getWriter()) {
 
@@ -78,12 +71,6 @@ public class StudentController extends HttpServlet implements Filter {
             out.println("</html>");
         }
     }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
-    }
-
     public void destroy() {
     }
 }

@@ -29,11 +29,9 @@ public class ConnectionFilter implements Filter {
                         .SC_INTERNAL_SERVER_ERROR, e.getMessage());
                 e.printStackTrace();
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        } catch (SQLException | ClassNotFoundException throwables) {
+            throw new ServiceJdbcException("Unable to conect filter");
 
+        }
     }
 }

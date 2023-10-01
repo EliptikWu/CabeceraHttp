@@ -15,8 +15,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 /**Public Access**/
 @WebServlet(name = "subjectController", value = "/subject-form")
-@WebFilter({"/public/subject"})
-public class SubjectController extends HttpServlet implements Filter {
+public class SubjectController extends HttpServlet{
 
     private SubjectRepositoryLogicImpl subjectRepository;
     private SubjectService service;
@@ -71,12 +70,6 @@ public class SubjectController extends HttpServlet implements Filter {
             out.println("</html>");
         }
     }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
-    }
-
     public void destroy() {
     }
 }

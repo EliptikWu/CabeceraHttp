@@ -18,8 +18,7 @@ import java.io.PrintWriter;
 import java.util.List;
 /**Public Access**/
 @WebServlet({"/student.json"})
-@WebFilter({"/public/students"})
-public class StudentJson extends HttpServlet implements Filter {
+public class StudentJson extends HttpServlet {
 
     public StudentRepositoryLogicImpl student;
     public StudentService service;
@@ -61,11 +60,6 @@ public class StudentJson extends HttpServlet implements Filter {
         String json = mapper.writeValueAsString(students);
         resp.setContentType("application/json");
         resp.getWriter().write(json);
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 }
 

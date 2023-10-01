@@ -1,6 +1,8 @@
 package com.example.reposistories.impl;
 
 
+import com.example.domain.mapping.dto.TeacherDto;
+import com.example.domain.mapping.mappers.TeacherMapper;
 import com.example.domain.model.Teacher;
 import com.example.exceptions.UniversityException;
 import com.example.reposistories.Repository;
@@ -8,7 +10,7 @@ import com.example.reposistories.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeacherRepositoryLogicImpl implements Repository<Teacher> {
+public class TeacherRepositoryLogicImpl implements Repository<TeacherDto> {
     private List<Teacher> teachers;
 
     public TeacherRepositoryLogicImpl() {
@@ -19,25 +21,27 @@ public class TeacherRepositoryLogicImpl implements Repository<Teacher> {
     }
 
     @Override
-    public List<Teacher> listar() {
-        return teachers;
+    public List<TeacherDto> list() {
+        return TeacherMapper.mapFrom(teachers);
     }
 
     @Override
-    public Teacher porId(Long id) {
+    public TeacherDto byId(Long id) {
         return teachers.stream()
-                .filter(e->id.equals(e.getId()))
+                .filter(e->e.getId() == (e.getId()))
                 .findFirst()
+                .map(TeacherMapper::mapFrom)
                 .orElseThrow(()-> new UniversityException("Teacher not found"));
+
     }
 
     @Override
-    public void guardar(Teacher teacher) {
-        teachers.add(teacher);
+    public void update(TeacherDto teacher) {
+        TeacherMapper.mapFrom(teachers);
     }
 
     @Override
-    public void eliminar(Long id) {
-        teachers.removeIf(e->e.getId().equals(id));
+    public void delete(Long id) {
+        TeacherMapper.mapFrom(teachers);
     }
 }

@@ -17,7 +17,7 @@ public class StudentMapper {
         return new Student(source.idStudent(),
                 source.name(),
                 source.email(),
-                source.semester());
+                source.semester(), "Ing. industrial");
     }
 
     public static List<StudentDto> mapFrom(List<Student> sources){

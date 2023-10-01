@@ -19,8 +19,7 @@ import java.util.List;
 
 /**Public Access**/
 @WebServlet({"/students.xls", "/students.html", "/students"})
-@WebFilter({"/public/students"})
-public class StudentXLS extends HttpServlet implements Filter {
+public class StudentXLS extends HttpServlet {
     private StudentRepositoryLogicImpl student;
     private StudentService service;
     public StudentXLS() {
@@ -71,10 +70,5 @@ public class StudentXLS extends HttpServlet implements Filter {
                 out.println("</html>");
             }
         }
-    }
-
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
     }
 }

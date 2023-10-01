@@ -1,5 +1,7 @@
 package com.example.reposistories.impl;
 
+import com.example.domain.mapping.dto.SubjectDto;
+import com.example.domain.mapping.mappers.SubjectMapper;
 import com.example.domain.model.Student;
 import com.example.domain.model.Subject;
 import com.example.domain.model.Teacher;
@@ -9,7 +11,7 @@ import com.example.reposistories.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubjectRepositoryLogicImpl implements Repository<Subject> {
+public class SubjectRepositoryLogicImpl implements Repository<SubjectDto> {
     private List<Subject> subjects;
 
     public SubjectRepositoryLogicImpl() {
@@ -20,25 +22,27 @@ public class SubjectRepositoryLogicImpl implements Repository<Subject> {
     }
 
     @Override
-    public List<Subject> listar() {
-        return subjects;
+    public List<SubjectDto> list() {
+        return SubjectMapper.mapFrom(subjects);
     }
 
     @Override
-    public Subject porId(Long id) {
+    public SubjectDto byId(Long id) {
         return subjects.stream()
-                .filter(e->id.equals(e.getId()))
+                .filter(e->e.getId() == (e.getId()))
                 .findFirst()
-                .orElseThrow(()-> new UniversityException("Subject not found"));
+                .map(SubjectMapper::mapFrom)
+                .orElseThrow(()-> new UniversityException("Subject not found"));    }
+
+    @Override
+    public void update(SubjectDto subjectDto) {
+        SubjectMapper.mapFrom(subjects);
+
     }
 
     @Override
-    public void guardar(Subject subject) {
-        subjects.add(subject);
-    }
+    public void delete(Long id) {
+        SubjectMapper.mapFrom(subjects);
 
-    @Override
-    public void eliminar(Long id) {
-        subjects.removeIf(e->e.getId().equals(id));
     }
 }

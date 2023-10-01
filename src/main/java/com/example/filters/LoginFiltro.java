@@ -1,4 +1,4 @@
-package com.example.controllers;
+package com.example.filters;
 
 import com.example.services.LoginService;
 import com.example.services.impl.LoginServiceSessionImpl;
@@ -9,8 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Optional;
-/**Private Access**/
-@WebFilter({"/private/students"})
+@WebFilter({"/private/students","/private/teacher","/private/subject","/private/loginId","/private/login","/public/reloj"})
 public class LoginFiltro implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain
