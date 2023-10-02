@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-@WebFilter("/*")
+//@WebFilter("/*")
 public class ConnectionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain

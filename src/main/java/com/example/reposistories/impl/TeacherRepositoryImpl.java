@@ -35,7 +35,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
     public List<TeacherDto> list() {
         List<Teacher> teacherList = new ArrayList<>();
         try (Statement statement = getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT * from teachers")) {
+             ResultSet resultSet = statement.executeQuery("SELECT * from teacher")) {
             while (resultSet.next()) {
                 Teacher teacher = buildObject(resultSet);
                 teacherList.add(teacher);
@@ -50,7 +50,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
     public TeacherDto byId(Long id) {
         Teacher teacher = null;
         try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT * FROM teachers WHERE idTea =?")) {
+                .prepareStatement("SELECT * FROM teacher WHERE idTea =?")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -66,17 +66,17 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
     @Override
     public void update(TeacherDto teacher) {
         String sql;
-        if (teacher.idTeacher() != null && teacher.idTeacher() > 0) {
-            sql = "UPDATE teachers SET name=?, email=? WHERE idTea=?";
+        if (teacher.idTea() != null && teacher.idTea() > 0) {
+            sql = "UPDATE teacher SET name=?, email=? WHERE idTea=?";
         } else {
-            sql = "INSERT INTO teachers (name, email) VALUES(?,?)";
+            sql = "INSERT INTO teacher (name, email) VALUES(?,?)";
         }
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, teacher.name());
             stmt.setString(2, teacher.email());
 
-            if (teacher.idTeacher() != null && teacher.idTeacher() > 0) {
-                stmt.setLong(3, teacher.idTeacher());
+            if (teacher.idTea() != null && teacher.idTea() > 0) {
+                stmt.setLong(3, teacher.idTea());
             }
             stmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -86,7 +86,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
 
     @Override
     public void delete(Long id) {
-        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM teachers WHERE idTea =?")) {
+        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM teacher WHERE idTea =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException throwables){

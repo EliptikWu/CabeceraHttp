@@ -15,7 +15,7 @@ public class SubjectMapper {
     }
 
     public static Subject mapFrom(SubjectDto source){
-        return new Subject(source.idSubject(),
+        return new Subject(source.idSub(),
                 source.name(),
                 source.teacher());
     }

@@ -15,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradesRepositoryImpl implements Repository<GradesDto> {
+    private Connection conn;
+    public GradesRepositoryImpl(Connection conn) {
+        this.conn = conn;
+    }
 
     private Connection getConnection() throws SQLException, ClassNotFoundException {
         return ConnectionDB.getInstance();
@@ -95,7 +99,7 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
     @Override
     public void update(GradesDto grades) {
         String sql;
-        if (grades.idGrades() != null && grades.idGrades() > 0) {
+        if (grades.idGra() != null && grades.idGra() > 0) {
             sql = "UPDATE grades SET idStu=?, idSub=? , corte=?  WHERE idGra=?";
         } else {
             sql = "INSERT INTO grades (idStu, id,subject, grade) VALUES(?,?)";
@@ -104,8 +108,8 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
             stmt.setLong(1, grades.student().getIdStu());
             stmt.setLong(2, grades.subject().getIdSub());
 
-            if (grades.idGrades() != null && grades.idGrades() > 0) {
-                stmt.setLong(3, grades.idGrades());
+            if (grades.idGra() != null && grades.idGra() > 0) {
+                stmt.setLong(3, grades.idGra());
             }
             stmt.executeUpdate();
         } catch (SQLException e) {

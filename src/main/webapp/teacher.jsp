@@ -14,8 +14,8 @@
         <div class="col-sm-4"><input type="text" name="name" id="name" class="form-control"></div>
     </div>
     <div class="row mb-3">
-        <label for="teacher" class="col-form-label col-sm-2">Teacher</label>
-        <div class="col-sm-4"><input type="text" name="teacher" id="teacher" class="form-control"></div>
+        <label for="email" class="col-form-label col-sm-2">Email</label>
+        <div class="col-sm-4"><input type="text" name="email" id="email" class="form-control"></div>
     </div>
     <div class="row mb-3">
         <div>

@@ -55,7 +55,7 @@ public class StudentXLS extends HttpServlet {
 
             student.forEach(p ->{
                 out.println("<tr>");
-                out.println("<td>" + p.idStudent() + "</td>");
+                out.println("<td>" + p.idStu() + "</td>");
                 out.println("<td>" + p.name() + "</td>");
                 out.println("<td>" + p.email() + "</td>");
                 out.println("<td>" + p.semester() + "</td>");

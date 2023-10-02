@@ -48,7 +48,7 @@ public class StudentController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         Connection conn = (Connection) req.getAttribute("conn");
-        studentRepository = new StudentRepositoryJdbcImpl(conn);
+        //studentRepository = new StudentRepositoryJdbcImpl(conn);
         service = new StudentServiceImpl(conn);
         String name = req.getParameter("name");
         String email = req.getParameter("email");
@@ -58,8 +58,8 @@ public class StudentController extends HttpServlet {
                 .email(email)
                 .semester(semester).build();
         StudentDto studentDto = StudentMapper.mapFrom(student);
-        service.update(studentDto);
-        System.out.println(service.list());
+            service.update(studentDto);
+      //  System.out.println(service.list());
 
         try (PrintWriter out = resp.getWriter()) {
 

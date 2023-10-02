@@ -1,7 +1,6 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.GradesDto;
-import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.GradesMapper;
 import com.example.domain.model.Grades;
 import com.example.domain.model.Student;
@@ -9,13 +8,14 @@ import com.example.domain.model.Subject;
 import com.example.domain.model.Teacher;
 import com.example.reposistories.Repository;
 
+import java.sql.Connection;
 import java.util.List;
 
 public class GradesRepositoryLogicImpl implements Repository<GradesDto> {
 
     private List<Grades> grades;
 
-    public GradesRepositoryLogicImpl(){
+    public GradesRepositoryLogicImpl(Connection conn){
         Teacher t1 = new Teacher(1L, "Juan","1234@cue.edu.com");
         Teacher t2 = new Teacher(2L, "Pepito","1234@cue.edu.com");
 

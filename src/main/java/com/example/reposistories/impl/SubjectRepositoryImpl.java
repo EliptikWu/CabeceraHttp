@@ -71,7 +71,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     @Override
     public void update(SubjectDto Subject) {
         String sql;
-        if (Subject.idSubject() != null && Subject.idSubject() > 0) {
+        if (Subject.idSub() != null && Subject.idSub() > 0) {
             sql = "UPDATE subjects SET name=?, idTea=? WHERE idSub=?";
         } else {
             sql = "INSERT INTO subjects (name, idTea) VALUES(?,?)";
@@ -80,8 +80,8 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
             stmt.setString(1, Subject.name());
             stmt.setLong(2, Long.parseLong(Subject.teacher()));
 
-            if (Subject.idSubject() != null && Subject.idSubject() > 0) {
-                stmt.setLong(3, Subject.idSubject());
+            if (Subject.idSub() != null && Subject.idSub() > 0) {
+                stmt.setLong(3, Subject.idSub());
             }
             stmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {

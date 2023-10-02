@@ -19,7 +19,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
 
     private Student createStudent(ResultSet rs) throws SQLException {
         Student student = new Student();
-        student.setIdStu(rs.getLong("id"));
+        student.setIdStu(rs.getLong("idStu"));
         student.setName(rs.getString("nombre"));
         student.setEmail(rs.getString("email"));
         student.setSemester(rs.getString("semester"));
@@ -30,7 +30,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
         List<Student> studentList = new ArrayList<>();
 
         try (Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * from students")) {
+             ResultSet rs = stmt.executeQuery("SELECT * from student")) {
             while (rs.next()) {
                 Student ps= createStudent(rs);
                 studentList.add(ps);
@@ -61,17 +61,18 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
     @Override
     public void update(StudentDto student) {
         String sql;
-        if (student.idStudent() != null && student.idStudent() > 0) {
+        if (student.idStu() != null && student.idStu() > 0) {
             sql = "UPDATE student SET name=?, email=?, semester=? WHERE idStu=?";
         } else {
-            sql = "INSERT INTO student (name, email, semester) VALUES(?,?,?,?)";
+            sql = "INSERT INTO student (name, email, semester) VALUES(?,?,?)";
         }
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, student.name());
             pstmt.setString(2, student.email());
+            pstmt.setString(3, student.semester());
 
-            if (student.idStudent() != null && student.idStudent() > 0) {
-                pstmt.setLong(4, student.idStudent());
+            if (student.idStu() != null && student.idStu() > 0) {
+                pstmt.setLong(4, student.idStu());
             }
             pstmt.executeUpdate();
         } catch (SQLException throwables) {

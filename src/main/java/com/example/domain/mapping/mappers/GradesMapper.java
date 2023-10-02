@@ -14,7 +14,7 @@ public class GradesMapper {
     }
 
     public static Grades mapFrom(GradesDto source){
-        return new Grades(source.idGrades(),
+        return new Grades(source.idGra(),
                 source.student(),
                 source.subject(),
                 source.corte());

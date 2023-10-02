@@ -1,9 +1,18 @@
 package com.example.controllers;
 
+import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.dto.TeacherDto;
+import com.example.domain.mapping.mappers.SubjectMapper;
+import com.example.domain.mapping.mappers.TeacherMapper;
+import com.example.domain.model.Subject;
 import com.example.domain.model.Teacher;
+import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
+import com.example.reposistories.impl.SubjectRepositoryImpl;
+import com.example.reposistories.impl.TeacherRepositoryImpl;
 import com.example.reposistories.impl.TeacherRepositoryLogicImpl;
 import com.example.services.TeacherService;
+import com.example.services.impl.StudentServiceImpl;
+import com.example.services.impl.SubjectServiceImpl;
 import com.example.services.impl.TeacherServiceImpl;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -23,19 +32,9 @@ public class TeacherController extends HttpServlet {
     private TeacherRepositoryLogicImpl teacherRepository;
     private TeacherService service;
 
-    public TeacherController() {
-        teacherRepository = new TeacherRepositoryLogicImpl();
-        service = new TeacherServiceImpl((Connection) teacherRepository);
-    }
-
-    private String message;
-
-    public void init() {
-        message = "Hello World!";
-    }
-
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
+        Connection conn = (Connection) request.getAttribute("conn");
 
         // Hello
         PrintWriter out = response.getWriter();
@@ -48,11 +47,17 @@ public class TeacherController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
+        Connection conn = (Connection) req.getAttribute("conn");
+        teacherRepository = new TeacherRepositoryLogicImpl(conn);
+        service = new TeacherServiceImpl(conn);
 
         String name = req.getParameter("name");
         String email = req.getParameter("email");
-        TeacherDto teacher = new TeacherDto(4L, name,email);
-        service.update(teacher);
+        Teacher teacher = Teacher.builder()
+                .name(name)
+                .email(email).build();
+        TeacherDto teacherDto = TeacherMapper.mapFrom(teacher);
+        service.update(teacherDto);
         System.out.println(service.list());
 
         try (PrintWriter out = resp.getWriter()) {

@@ -41,7 +41,7 @@ public class StudentJson extends HttpServlet {
             out.println(" <body>");
             out.println(" <h1>Detalle de producto desde json!</h1>");
             out.println("<ul>");
-            out.println("<li>Id: " + student.idStudent() + "</li>");
+            out.println("<li>Id: " + student.idStu() + "</li>");
             out.println("<li>Nombre: " + student.name() + "</li>");
             out.println("<li>Semestre: " + student.semester() + "</li>");
             out.println("</ul>");

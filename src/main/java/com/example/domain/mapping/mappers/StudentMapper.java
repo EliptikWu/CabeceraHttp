@@ -14,7 +14,7 @@ public class StudentMapper {
     }
 
     public static Student mapFrom (StudentDto source){
-        return new Student(source.idStudent(),
+        return new Student(source.idStu(),
                 source.name(),
                 source.email(),
                 source.semester());
