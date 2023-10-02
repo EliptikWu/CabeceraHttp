@@ -7,7 +7,7 @@ import java.util.List;
 
 public class GradesMapper {
     public static GradesDto mapFrom(Grades source) {
-        return new GradesDto(source.getId(),
+        return new GradesDto(source.getIdGra(),
                 source.getStudent(),
                 source.getSubject(),
                 source.getGrade());

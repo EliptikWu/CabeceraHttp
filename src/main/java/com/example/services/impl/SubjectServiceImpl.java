@@ -3,12 +3,13 @@ package com.example.services.impl;
 import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.model.Subject;
 import com.example.reposistories.Repository;
-import com.example.reposistories.impl.SubjectRepositoryLogicImpl;
+import com.example.reposistories.impl.SubjectRepositoryImpl;
 import com.example.services.SubjectService;
+import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 import java.util.List;
-
+@NoArgsConstructor
 public class SubjectServiceImpl implements SubjectService {
     private Repository<SubjectDto> repo;
 

@@ -2,9 +2,7 @@ package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.SubjectMapper;
-import com.example.domain.model.Student;
 import com.example.domain.model.Subject;
-import com.example.domain.model.Teacher;
 import com.example.exceptions.UniversityException;
 import com.example.reposistories.Repository;
 
@@ -29,7 +27,7 @@ public class SubjectRepositoryLogicImpl implements Repository<SubjectDto> {
     @Override
     public SubjectDto byId(Long id) {
         return subjects.stream()
-                .filter(e->e.getId() == (e.getId()))
+                .filter(e->e.getIdSub() == (e.getIdSub()))
                 .findFirst()
                 .map(SubjectMapper::mapFrom)
                 .orElseThrow(()-> new UniversityException("Subject not found"));    }

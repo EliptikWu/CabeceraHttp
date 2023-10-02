@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Optional;
-@WebFilter({"/private/students","/private/teacher","/private/subject","/private/loginId","/private/login","/public/reloj"})
+@WebFilter({"/public/students","/private/teacher","/private/subject","/private/loginId","/private/login","/public/reloj"})
 public class LoginFiltro implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain

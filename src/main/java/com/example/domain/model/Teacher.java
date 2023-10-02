@@ -10,7 +10,7 @@ import lombok.*;
 
 public class Teacher {
 
-    private Long id;
+    private Long idTea;
     private String name;
     private String email;
 }

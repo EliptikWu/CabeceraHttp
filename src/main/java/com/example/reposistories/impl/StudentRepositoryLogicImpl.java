@@ -1,6 +1,7 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.StudentDto;
+import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.exceptions.UniversityException;
@@ -27,7 +28,7 @@ public class StudentRepositoryLogicImpl implements Repository<StudentDto> {
     @Override
     public StudentDto byId(Long id) {
         return students.stream()
-                .filter(e->e.getId() == (e.getId()))
+                .filter(e->e.getIdStu() == (e.getIdStu()))
                 .findFirst()
                 .map(StudentMapper::mapFrom)
                 .orElseThrow(()-> new UniversityException("Student not found"));

@@ -1,13 +1,15 @@
 package com.example.services.impl;
 
 import com.example.domain.mapping.dto.StudentDto;
-import com.example.domain.model.Student;
 import com.example.reposistories.Repository;
 import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
 import com.example.services.StudentService;
+import lombok.NoArgsConstructor;
+
 
 import java.sql.Connection;
 import java.util.List;
+@NoArgsConstructor
 public class StudentServiceImpl implements StudentService {
 
     private Repository<StudentDto> repo;
@@ -26,7 +28,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void update(Student student) {
+    public void update(StudentDto student) {
         repo.update(student);
     }
 

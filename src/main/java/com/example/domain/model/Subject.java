@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class Subject {
 
-    private Long id;
+    private Long idSub;
     private String name;
     private String teacher;
 

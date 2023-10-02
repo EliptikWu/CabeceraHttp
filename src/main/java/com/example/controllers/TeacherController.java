@@ -1,5 +1,6 @@
 package com.example.controllers;
 
+import com.example.domain.mapping.dto.TeacherDto;
 import com.example.domain.model.Teacher;
 import com.example.reposistories.impl.TeacherRepositoryLogicImpl;
 import com.example.services.TeacherService;
@@ -13,6 +14,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+
 /**Public Access**/
 @WebServlet(name = "teacherController", value = "/teacher-form")
 public class TeacherController extends HttpServlet {
@@ -22,7 +25,7 @@ public class TeacherController extends HttpServlet {
 
     public TeacherController() {
         teacherRepository = new TeacherRepositoryLogicImpl();
-        service = new TeacherServiceImpl(teacherRepository);
+        service = new TeacherServiceImpl((Connection) teacherRepository);
     }
 
     private String message;
@@ -38,7 +41,7 @@ public class TeacherController extends HttpServlet {
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
         out.println("<h1>Teachers</h1>");
-        out.println(service.listar());
+        out.println(service.list());
         out.println("</body></html>");
     }
 
@@ -48,9 +51,9 @@ public class TeacherController extends HttpServlet {
 
         String name = req.getParameter("name");
         String email = req.getParameter("email");
-        Teacher teacher = new Teacher(4L, name,email);
-        service.guardar(teacher);
-        System.out.println(service.listar());
+        TeacherDto teacher = new TeacherDto(4L, name,email);
+        service.update(teacher);
+        System.out.println(service.list());
 
         try (PrintWriter out = resp.getWriter()) {
 

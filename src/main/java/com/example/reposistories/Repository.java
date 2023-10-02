@@ -1,8 +1,7 @@
 package com.example.reposistories;
 
-import com.example.domain.mapping.dto.StudentDto;
+import com.example.domain.mapping.dto.SubjectDto;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface Repository <T>{

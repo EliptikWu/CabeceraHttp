@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class Grades {
 
-    private Long id;
+    private Long idGra;
     private Student student;
     private Subject subject;
     private double grade;

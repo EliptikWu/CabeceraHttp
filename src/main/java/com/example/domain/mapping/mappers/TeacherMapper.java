@@ -9,7 +9,7 @@ import java.util.List;
 public class TeacherMapper {
 
     public static TeacherDto mapFrom(Teacher source){
-        return new TeacherDto(source.getId(),
+        return new TeacherDto(source.getIdTea(),
                 source.getName(),
                 source.getEmail());
     }

@@ -1,5 +1,6 @@
 package com.example.reposistories.impl;
 
+import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.dto.TeacherDto;
 import com.example.domain.mapping.mappers.TeacherMapper;
 import com.example.domain.model.Teacher;
@@ -23,7 +24,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
     private Teacher buildObject(ResultSet resultSet) throws
             SQLException {
         Teacher teacher = new Teacher();
-        teacher.setId(resultSet.getLong("id_teacher"));
+        teacher.setIdTea(resultSet.getLong("idTea"));
         teacher.setName(resultSet.getString("name"));
         teacher.setEmail(resultSet.getString("email"));
 
@@ -49,7 +50,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
     public TeacherDto byId(Long id) {
         Teacher teacher = null;
         try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT * FROM teachers WHERE id_teachers =?")) {
+                .prepareStatement("SELECT * FROM teachers WHERE idTea =?")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -66,7 +67,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
     public void update(TeacherDto teacher) {
         String sql;
         if (teacher.idTeacher() != null && teacher.idTeacher() > 0) {
-            sql = "UPDATE teachers SET name=?, email=? WHERE id_teacher=?";
+            sql = "UPDATE teachers SET name=?, email=? WHERE idTea=?";
         } else {
             sql = "INSERT INTO teachers (name, email) VALUES(?,?)";
         }
@@ -85,7 +86,7 @@ public class TeacherRepositoryImpl implements Repository<TeacherDto> {
 
     @Override
     public void delete(Long id) {
-        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM teachers WHERE id_teachers =?")) {
+        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM teachers WHERE idTea =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException throwables){

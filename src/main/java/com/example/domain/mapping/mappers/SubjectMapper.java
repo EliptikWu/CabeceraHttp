@@ -9,7 +9,7 @@ import java.util.List;
 public class SubjectMapper {
 
     public static SubjectDto mapFrom(Subject source){
-        return new SubjectDto(source.getId(),
+        return new SubjectDto(source.getIdSub(),
                 source.getName(),
                 source.getTeacher());
     }

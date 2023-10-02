@@ -1,6 +1,7 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.StudentDto;
+import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.exceptions.ServiceJdbcException;
@@ -18,7 +19,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
 
     private Student createStudent(ResultSet rs) throws SQLException {
         Student student = new Student();
-        student.setId(rs.getLong("id"));
+        student.setIdStu(rs.getLong("id"));
         student.setName(rs.getString("nombre"));
         student.setEmail(rs.getString("email"));
         student.setSemester(rs.getString("semester"));
@@ -44,7 +45,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
     @Override
     public StudentDto byId(Long id) {
         Student student = null;
-        try (PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM student WHERE id_student=?")) {
+        try (PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM student WHERE idStu=?")) {
             pstmt.setLong(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -61,9 +62,9 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
     public void update(StudentDto student) {
         String sql;
         if (student.idStudent() != null && student.idStudent() > 0) {
-            sql = "UPDATE student SET name=?, career=?, email=?, semester=? WHERE id_student=?";
+            sql = "UPDATE student SET name=?, email=?, semester=? WHERE idStu=?";
         } else {
-            sql = "INSERT INTO student (name, career, email, semester) VALUES(?,?,?,?)";
+            sql = "INSERT INTO student (name, email, semester) VALUES(?,?,?,?)";
         }
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, student.name());
@@ -80,7 +81,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
 
     @Override
     public void delete(Long id) {
-        try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM student WHERE id_student = ?")) {
+        try (PreparedStatement pstmt = conn.prepareStatement("DELETE FROM student WHERE idStu = ?")) {
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
         } catch (SQLException e) {

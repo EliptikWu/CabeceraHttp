@@ -7,11 +7,11 @@ import com.example.domain.model.Teacher;
 import com.example.exceptions.ServiceJdbcException;
 import com.example.reposistories.Repository;
 import connection.ConnectionDB;
+import lombok.NoArgsConstructor;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
 public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     private Connection conn;
     public SubjectRepositoryImpl(Connection conn) {
@@ -24,10 +24,10 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     private Subject buildObject(ResultSet resultSet) throws
             SQLException {
         Subject subject = new Subject();
-        subject.setId(resultSet.getLong("id_subject"));
+        subject.setIdSub(resultSet.getLong("idsubject"));
         subject.setName(resultSet.getString("name"));
         Teacher teacher = new Teacher();
-        teacher.setId(resultSet.getLong("id_teacher"));
+        teacher.setIdTea(resultSet.getLong("idteacher"));
         teacher.setName(resultSet.getString("name"));
         subject.setTeacher(String.valueOf(teacher));
 
@@ -39,7 +39,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
         List<Subject> SubjectList = new ArrayList<>();
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT subject.name, teachers.name, teachers.email " +
-                     "FROM subject INNER JOIN teachers on subject.id_teacher=teachers.id_teacher;")) {
+                     "FROM subject INNER JOIN teachers on subject.idTea=teachers.idTea;")) {
             while (resultSet.next()) {
                 Subject Subject = buildObject(resultSet);
                 SubjectList.add(Subject);
@@ -55,7 +55,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
         Subject Subject = null;
         try (PreparedStatement preparedStatement = getConnection()
                 .prepareStatement("SELECT subject.name, teachers.name, teachers.email FROM subject INNER JOIN " +
-                        "teachers on subject.id_teacher=teachers.id_teacher WHERE subject.id_subject = ?")) {
+                        "teachers on subject.idTea=teachers.idTea WHERE subject.idSub = ?")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -72,13 +72,13 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     public void update(SubjectDto Subject) {
         String sql;
         if (Subject.idSubject() != null && Subject.idSubject() > 0) {
-            sql = "UPDATE subjects SET name=?, id_teacher=? WHERE id_subject=?";
+            sql = "UPDATE subjects SET name=?, idTea=? WHERE idSub=?";
         } else {
-            sql = "INSERT INTO subjects (name, id_teacher) VALUES(?,?)";
+            sql = "INSERT INTO subjects (name, idTea) VALUES(?,?)";
         }
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setString(1, Subject.name());
-            stmt.setLong(2, Subject.teacher().get());
+            stmt.setLong(2, Long.parseLong(Subject.teacher()));
 
             if (Subject.idSubject() != null && Subject.idSubject() > 0) {
                 stmt.setLong(3, Subject.idSubject());
@@ -92,7 +92,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
 
     @Override
     public void delete(Long id) {
-        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM subjects WHERE id_subject =?")) {
+        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM subjects WHERE idSub =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException | ClassNotFoundException throwables ){

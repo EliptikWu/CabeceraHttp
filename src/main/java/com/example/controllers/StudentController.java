@@ -1,6 +1,9 @@
 package com.example.controllers;
 
+import com.example.domain.mapping.dto.StudentDto;
+import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
+import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
 import com.example.services.impl.StudentServiceImpl;
@@ -12,44 +15,50 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+
 /**Public Access**/
 
 @WebServlet(name = "studentController", value = "/student-form")
-public class StudentController extends HttpServlet{
+public class StudentController extends HttpServlet {
 
-    private StudentRepositoryLogicImpl studentRepository;
-    private StudentService service;
-
-    public StudentController() {
-        studentRepository = new StudentRepositoryLogicImpl();
-        service = new StudentServiceImpl(studentRepository);
-    }
+    public StudentRepositoryJdbcImpl studentRepository;
+    public StudentService service;
 
     private String message;
 
-/**    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws
-            ServletException, IOException {
-        Connection conn = (Connection) req.getAttribute("conn");
-        StudentService service = new StudentServiceImpl(conn);
+    public void init() {
+        message = "Students";
+    }
 
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
+        Connection conn = (Connection) request.getAttribute("conn");
+        studentRepository = new StudentRepositoryJdbcImpl(conn);
+        service = new StudentServiceImpl(conn);
 
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
         out.println("<h1>Students</h1>");
-        out.println(service.listar());
+        out.println(service.list());
         out.println("</body></html>");
-    }**/
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-
+        Connection conn = (Connection) req.getAttribute("conn");
+        studentRepository = new StudentRepositoryJdbcImpl(conn);
+        service = new StudentServiceImpl(conn);
         String name = req.getParameter("name");
-        String semester = req.getParameter("semester");
         String email = req.getParameter("email");
-        Student student = new Student(4L, name,semester,email,"","");
-        service.update(student);
+        String semester = req.getParameter("semester");
+        Student student = Student.builder()
+                .name(name)
+                .email(email)
+                .semester(semester).build();
+        StudentDto studentDto = StudentMapper.mapFrom(student);
+        service.update(studentDto);
         System.out.println(service.list());
 
         try (PrintWriter out = resp.getWriter()) {
@@ -62,15 +71,14 @@ public class StudentController extends HttpServlet{
             out.println("    </head>");
             out.println("    <body>");
             out.println("        <h1>Resultado form!</h1>");
+
             out.println("        <ul>");
             out.println("            <li>Name: " + name + "</li>");
-            out.println("            <li>Semester: " + semester + "</li>");
             out.println("            <li>Email: " + email + "</li>");
+            out.println("            <li>Semester: " + semester + "</li>");
             out.println("        </ul>");
             out.println("    </body>");
             out.println("</html>");
         }
-    }
-    public void destroy() {
     }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public class StudentMapper {
 
     public static StudentDto mapFrom (Student source){
-       return new StudentDto(source.getId(),
+       return new StudentDto(source.getIdStu(),
                source.getName(),
                source.getEmail(),
                source.getSemester());
@@ -17,7 +17,7 @@ public class StudentMapper {
         return new Student(source.idStudent(),
                 source.name(),
                 source.email(),
-                source.semester(), "Ing. industrial");
+                source.semester());
     }
 
     public static List<StudentDto> mapFrom(List<Student> sources){

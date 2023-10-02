@@ -1,6 +1,7 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.GradesDto;
+import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.GradesMapper;
 import com.example.domain.model.Grades;
 import com.example.domain.model.Student;
@@ -22,21 +23,21 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
 
     private Grades buildObject(ResultSet resultSet) throws SQLException {
         Grades grades = new Grades();
-        grades.setId(resultSet.getLong("id_grades"));
+        grades.setIdGra(resultSet.getLong("id_grades"));
 
         Student student = new Student();
-        student.setId(resultSet.getLong("id_student"));
+        student.setIdStu(resultSet.getLong("id_student"));
         student.setName(resultSet.getString("name"));
         student.setEmail(resultSet.getString("email"));
         student.setSemester(resultSet.getString("semester"));
         grades.setStudent(student);
 
         Subject subject = new Subject();
-        subject.setId(resultSet.getLong("id_subject"));
+        subject.setIdSub(resultSet.getLong("id_subject"));
         subject.setName(resultSet.getString("name"));
 
         Teacher teacher = new Teacher();
-        teacher.setId(resultSet.getLong("id_teacher"));
+        teacher.setIdTea(resultSet.getLong("id_teacher"));
         teacher.setName(resultSet.getString("name"));
         teacher.setEmail(resultSet.getString("email"));
         subject.setTeacher(String.valueOf(teacher));
@@ -95,13 +96,13 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
     public void update(GradesDto grades) {
         String sql;
         if (grades.idGrades() != null && grades.idGrades() > 0) {
-            sql = "UPDATE grades SET id_student=?, id_subject=? , corte=?  WHERE id_grades=?";
+            sql = "UPDATE grades SET idStu=?, idSub=? , corte=?  WHERE idGra=?";
         } else {
-            sql = "INSERT INTO grades (id_student, id,subject, corte) VALUES(?,?)";
+            sql = "INSERT INTO grades (idStu, id,subject, grade) VALUES(?,?)";
         }
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
-            stmt.setLong(1, grades.student().getId());
-            stmt.setLong(2, grades.subject().getId());
+            stmt.setLong(1, grades.student().getIdStu());
+            stmt.setLong(2, grades.subject().getIdSub());
 
             if (grades.idGrades() != null && grades.idGrades() > 0) {
                 stmt.setLong(3, grades.idGrades());

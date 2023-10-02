@@ -1,6 +1,7 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.GradesDto;
+import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.GradesMapper;
 import com.example.domain.model.Grades;
 import com.example.domain.model.Student;

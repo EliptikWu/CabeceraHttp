@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 public class Student {
 
-    private Long id;
+    private Long idStu;
     private String name;
     private String email;
     private String semester;
