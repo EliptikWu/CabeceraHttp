@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.util.Map"%>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.domain.mapping.dto.TeacherDto" %>
 <%
     List<String> errores = (List<String>)request.getAttribute("errores");
 %>
@@ -60,6 +61,7 @@
             }
     %>
         </div>
+
     <div class="row mb-3">
         <label for="habilitar" class="col-form-label
 col-sm-2">Habilitar</label>

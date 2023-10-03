@@ -24,8 +24,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**Public Access**/
+/**Private Access**/
 @WebServlet(name = "teacherController", value = "/teacher-form")
 public class TeacherController extends HttpServlet {
 
@@ -44,6 +48,13 @@ public class TeacherController extends HttpServlet {
         out.println("</body></html>");
     }
 
+    private TeacherDto getTeacherByName(String teacher) {
+        List<TeacherDto> teachers = (List<TeacherDto>)getServletContext().getAttribute("teachers");
+        return teachers.stream()
+                .filter(e->e.name().equalsIgnoreCase(teacher))
+                .findFirst()
+                .orElseGet(null);
+    }
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
@@ -59,7 +70,9 @@ public class TeacherController extends HttpServlet {
         TeacherDto teacherDto = TeacherMapper.mapFrom(teacher);
         service.update(teacherDto);
         System.out.println(service.list());
-
+        List<String> errores = getErrors(name, email);
+        Map<String, String> errorsmap = getErrors2(name, email);
+        if (errorsmap.isEmpty()) {
         try (PrintWriter out = resp.getWriter()) {
 
             out.println("<!DOCTYPE html>");
@@ -77,7 +90,33 @@ public class TeacherController extends HttpServlet {
             out.println("    </body>");
             out.println("</html>");
         }
+
+    } else {
+            req.setAttribute("errors", errores);
+            req.setAttribute("errorsmap", errorsmap);
+
+            getServletContext().getRequestDispatcher("/student.jsp").forward(req, resp);
+        }
     }
-    public void destroy() {
+    private Map<String,String> getErrors2(String name,String email) {
+        Map<String,String> errors = new HashMap<>();
+        if(name==null ||name.isBlank()){
+            errors.put("name","El nombre es requerido");
+        }
+        if(email==null ||email.isBlank()){
+            errors.put("email","El email es requerido");
+        }
+        return errors;
+    }
+    private List<String> getErrors(String name,String email)
+    {
+        List<String> errors = new ArrayList<String>();
+        if(name==null ||name.isBlank()){
+            errors.add("El nombre es requerido");
+        }
+        if(email==null ||email.isBlank()){
+            errors.add("El email es requerido");
+        }
+        return errors;
     }
 }

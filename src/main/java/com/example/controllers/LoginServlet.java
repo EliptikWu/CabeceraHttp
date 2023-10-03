@@ -1,5 +1,8 @@
 package com.example.controllers;
 
+import com.example.domain.mapping.dto.TeacherDto;
+import com.example.services.TeacherService;
+import com.example.services.impl.TeacherServiceImpl;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,6 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.util.List;
 
 /**Private Access**/
 @WebServlet("/login")
@@ -22,6 +27,12 @@ public class LoginServlet extends HttpServlet{
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         if (USERNAME.equals(username) && PASSWORD.equals(password)) {
+            Cookie usernameCookie = new Cookie("username", username);
+            resp.addCookie(usernameCookie);
+            Connection conn = (Connection) req.getAttribute("conn");
+            TeacherService service = new TeacherServiceImpl(conn);
+            List<TeacherDto> teacherDtoList = service.list();
+            getServletContext().setAttribute("teacherDtoList", teacherDtoList);
             resp.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = resp.getWriter()) {
                 out.println("<!DOCTYPE html>");
@@ -40,8 +51,6 @@ public class LoginServlet extends HttpServlet{
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sorry, not authorized " +
                     "to enter this page!");
         }if (USERNAME.equals(username) && PASSWORD.equals(password)) {
-            Cookie usernameCookie = new Cookie("username", username);
-            resp.addCookie(usernameCookie);
             resp.sendRedirect(req.getContextPath() + "/login.html");
         } else {
             resp.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Sorry, not authorized " +

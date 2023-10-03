@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**Public Access**/
+/**Private Access**/
 
 @WebServlet(name = "studentController", value = "/student-form")
 public class StudentController extends HttpServlet {
@@ -88,18 +88,13 @@ public class StudentController extends HttpServlet {
                 out.println("</html>");
             }
         } else {
-            /* errores.forEach(error -> {
-            out.println("<li>" + error + "</li>");
-            });
-            out.println("<p><a href=\"/student.jsp\">volver</a></p>");*/
             req.setAttribute("errors", errores);
             req.setAttribute("errorsmap", errorsmap);
 
             getServletContext().getRequestDispatcher("/student.jsp").forward(req, resp);
         }
     }
-    private Map<String,String> getErrors2(String name, String semester,String
-            email) {
+    private Map<String,String> getErrors2(String name,String email, String semester) {
         Map<String,String> errors = new HashMap<>();
         if(name==null ||name.isBlank()){
             errors.put("name","El nombre es requerido");
@@ -112,7 +107,7 @@ public class StudentController extends HttpServlet {
         }
         return errors;
     }
-    private List<String> getErrors(String name, String semester,String email)
+    private List<String> getErrors(String name,String email, String semester)
     {
         List<String> errors = new ArrayList<String>();
         if(name==null ||name.isBlank()){

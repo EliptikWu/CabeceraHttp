@@ -27,21 +27,21 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
 
     private Grades buildObject(ResultSet resultSet) throws SQLException {
         Grades grades = new Grades();
-        grades.setIdGra(resultSet.getLong("id_grades"));
+        grades.setIdGra(resultSet.getLong("idGra"));
 
         Student student = new Student();
-        student.setIdStu(resultSet.getLong("id_student"));
+        student.setIdStu(resultSet.getLong("idStu"));
         student.setName(resultSet.getString("name"));
         student.setEmail(resultSet.getString("email"));
         student.setSemester(resultSet.getString("semester"));
         grades.setStudent(student);
 
         Subject subject = new Subject();
-        subject.setIdSub(resultSet.getLong("id_subject"));
+        subject.setIdSub(resultSet.getLong("idSub"));
         subject.setName(resultSet.getString("name"));
 
         Teacher teacher = new Teacher();
-        teacher.setIdTea(resultSet.getLong("id_teacher"));
+        teacher.setIdTea(resultSet.getLong("idTea"));
         teacher.setName(resultSet.getString("name"));
         teacher.setEmail(resultSet.getString("email"));
         subject.setTeacher(String.valueOf(teacher));
@@ -56,10 +56,10 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
         List<Grades> gradesList = new ArrayList<>();
         try (Statement statement = getConnection().createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT student.id_student ,student.name, student.email," +
-                     " student.career, student.semester, subject.name, teachers.name, teachers.email, grades.corte FROM" +
+                     "student.semester, subject.name, teachers.name, teachers.email, grades.corte FROM" +
                      " grades INNER JOIN student on grades.id_student=student.id_student INNER JOIN subject on " +
-                     "grades.id_subject=subject.id_subject inner join teachers on " +
-                     "subject.id_teacher=teachers.id_teacher;")) {
+                     "grades.idSub=subject.idSub inner join teachers on " +
+                     "subject.idTea=teachers.idTea;")) {
             while (resultSet.next()) {
                 Grades grades = buildObject(resultSet);
                 gradesList.add(grades);
@@ -76,11 +76,11 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
     public GradesDto byId(Long id) {
         Grades grades = null;
         try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT student.id_student ,student.name, student.email, student.career, " +
-                        "student.semester, subject.name, teachers.name, teachers.email, grades.corte FROM grades " +
-                        "INNER JOIN student on grades.id_student=student.id_student INNER JOIN subject on " +
-                        "grades.id_subject=subject.id_subject inner join teachers on " +
-                        "subject.id_teacher=teachers.id_teacher WHERE grades.id_grades = ?")) {
+                .prepareStatement("SELECT student.idStu ,student.name, student.email, " +
+                        "student.semester, subject.name, teacher.name, teacher.email, grades.corte FROM grades " +
+                        "INNER JOIN student on grades.idStu=student.idStu INNER JOIN subject on " +
+                        "grades.idSub=subject.idSub inner join teacher on " +
+                        "subject.idTea=teachers.idTea WHERE grades.idGra = ?")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
@@ -100,9 +100,9 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
     public void update(GradesDto grades) {
         String sql;
         if (grades.idGra() != null && grades.idGra() > 0) {
-            sql = "UPDATE grades SET idStu=?, idSub=? , corte=?  WHERE idGra=?";
+            sql = "UPDATE grades SET idStu=?, idSub=? , grade=?  WHERE idGra=?";
         } else {
-            sql = "INSERT INTO grades (idStu, id,subject, grade) VALUES(?,?)";
+            sql = "INSERT INTO grades (idStu, idSub, grade) VALUES(?,?,?)";
         }
         try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
             stmt.setLong(1, grades.student().getIdStu());
@@ -121,7 +121,7 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
 
     @Override
     public void delete(Long id) {
-        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM gradess WHERE id_grades =?")) {
+        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM grades WHERE idGra =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException throwables) {

@@ -5,12 +5,7 @@ import com.example.domain.mapping.mappers.GradesMapper;
 import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.mapping.mappers.SubjectMapper;
 import com.example.domain.model.Grades;
-import com.example.domain.model.Student;
-import com.example.domain.model.Subject;
-import com.example.reposistories.impl.GradesRepositoryImpl;
 import com.example.reposistories.impl.GradesRepositoryLogicImpl;
-import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
-import com.example.reposistories.impl.SubjectRepositoryImpl;
 import com.example.services.GradesService;
 import com.example.services.impl.GradesServiceImpl;
 import com.example.services.impl.StudentServiceImpl;
@@ -24,6 +19,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**Private Access**/
 @WebServlet(name = "GradesController", value = "/grades-form")
 public class GradesController extends HttpServlet {
 
@@ -31,6 +32,7 @@ public class GradesController extends HttpServlet {
     private GradesService service;
 
     private String message;
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         Connection conn = (Connection) request.getAttribute("conn");
@@ -62,7 +64,9 @@ public class GradesController extends HttpServlet {
         GradesDto gradesDto = GradesMapper.mapFrom(grades);
         service.update(gradesDto);
         System.out.println(service.list());
-
+        //List<String> errores = getErrors( studentid, subject, grade);
+        //Map<String, String> errorsmap = getErrors2(studentid, subject,grade);
+        //if (errorsmap.isEmpty()) {
         try (PrintWriter out = resp.getWriter()) {
 
             out.println("<!DOCTYPE html>");
@@ -81,8 +85,39 @@ public class GradesController extends HttpServlet {
             out.println("    </body>");
             out.println("</html>");
         }
+    }/**
+     else {
+            req.setAttribute("errors", errores);
+            req.setAttribute("errorsmap", errorsmap);
+
+            getServletContext().getRequestDispatcher("/grades.jsp").forward(req, resp);
+        }
+    private Map<String,String> getErrors2(Long studentid, Long subject, Double grade) {
+        Map<String,String> errors = new HashMap<>();
+        if(studentid==null ||studentid.isBlank()){
+            errors.put("studentid","El studentid es requerido");
+        }
+        if(subject==null ||subject.isBlank()){
+            errors.put("subject","El subject es requerido");
+        }
+        if(grade==null ||grade.isBlank()){
+            errors.put("grade","El grade es requerido");
+        }
+        return errors;
     }
-    public void destroy() {
-    }
+    private List<String> getErrors(Long studentid, Long email, Double semester)
+    {
+        List<Long> errors = new ArrayList<>();
+        if(studentid==null ||studentid.isBlank()){
+            errors.add(Long.valueOf("El studentid es requerido"));
+        }
+        if(email==null ||email.isBlank()){
+            errors.add("El email es requerido");
+        }
+        if(semester==null ||semester.isBlank()){
+            errors.add("El semester es requerido");
+        }
+        return errors;
+    }**/
 }
 

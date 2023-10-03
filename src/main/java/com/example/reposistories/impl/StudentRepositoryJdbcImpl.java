@@ -20,7 +20,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
     private Student createStudent(ResultSet rs) throws SQLException {
         Student student = new Student();
         student.setIdStu(rs.getLong("idStu"));
-        student.setName(rs.getString("nombre"));
+        student.setName(rs.getString("name"));
         student.setEmail(rs.getString("email"));
         student.setSemester(rs.getString("semester"));
         return student;

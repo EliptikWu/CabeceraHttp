@@ -23,8 +23,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**Public Access**/
+/**Private Access**/
 @WebServlet(name = "subjectController", value = "/subject-form")
 public class SubjectController extends HttpServlet{
     public SubjectRepositoryImpl subjectRepository;
@@ -65,6 +69,9 @@ public class SubjectController extends HttpServlet{
         SubjectDto subjectDto = SubjectMapper.mapFrom(subject);
         service.update(subjectDto);
         System.out.println(service.list());
+        List<String> errores = getErrors(name, teacher);
+        Map<String, String> errorsmap = getErrors2(name, teacher);
+        if (errorsmap.isEmpty()) {
 
         try (PrintWriter out = resp.getWriter()) {
 
@@ -86,8 +93,33 @@ public class SubjectController extends HttpServlet{
         }
     }
 
-    public void destroy() {
-    }
+        else {
+            req.setAttribute("errors", errores);
+            req.setAttribute("errorsmap", errorsmap);
 
+            getServletContext().getRequestDispatcher("/student.jsp").forward(req, resp);
+        }
+    }
+    private Map<String,String> getErrors2(String name,String teacher) {
+        Map<String,String> errors = new HashMap<>();
+        if(name==null ||name.isBlank()){
+            errors.put("name","El nombre es requerido");
+        }
+        if(teacher==null ||teacher.isBlank()){
+            errors.put("teacher","El teacher es requerido");
+        }
+        return errors;
+    }
+    private List<String> getErrors(String name,String teacher)
+    {
+        List<String> errors = new ArrayList<String>();
+        if(name==null ||name.isBlank()){
+            errors.add("El nombre es requerido");
+        }
+        if(teacher==null ||teacher.isBlank()){
+            errors.add("El teacher es requerido");
+        }
+        return errors;
+    }
 
 }
