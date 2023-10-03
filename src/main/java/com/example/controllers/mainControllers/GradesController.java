@@ -1,21 +1,21 @@
-package com.example.controllers;
+package com.example.controllers.mainControllers;
 
-import com.example.domain.mapping.dto.SubjectDto;
-import com.example.domain.mapping.dto.TeacherDto;
+import com.example.domain.mapping.dto.GradesDto;
+import com.example.domain.mapping.mappers.GradesMapper;
+import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.mapping.mappers.SubjectMapper;
-import com.example.domain.mapping.mappers.TeacherMapper;
+import com.example.domain.model.Grades;
+import com.example.domain.model.Student;
 import com.example.domain.model.Subject;
-import com.example.domain.model.Teacher;
+import com.example.reposistories.impl.GradesRepositoryImpl;
+import com.example.reposistories.impl.GradesRepositoryLogicImpl;
 import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
 import com.example.reposistories.impl.SubjectRepositoryImpl;
-import com.example.reposistories.impl.TeacherRepositoryImpl;
-import com.example.reposistories.impl.TeacherRepositoryLogicImpl;
-import com.example.services.TeacherService;
+import com.example.services.GradesService;
+import com.example.services.impl.GradesServiceImpl;
 import com.example.services.impl.StudentServiceImpl;
 import com.example.services.impl.SubjectServiceImpl;
-import com.example.services.impl.TeacherServiceImpl;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,22 +24,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+@WebServlet(name = "GradesController", value = "/grades-form")
+public class GradesController extends HttpServlet {
 
-/**Public Access**/
-@WebServlet(name = "teacherController", value = "/teacher-form")
-public class TeacherController extends HttpServlet {
+    private GradesRepositoryLogicImpl gradesRepository;
+    private GradesService service;
 
-    private TeacherRepositoryLogicImpl teacherRepository;
-    private TeacherService service;
-
+    private String message;
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         Connection conn = (Connection) request.getAttribute("conn");
+        gradesRepository = new GradesRepositoryLogicImpl(conn);
+        service = new GradesServiceImpl(conn);
 
         // Hello
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
-        out.println("<h1>Teachers</h1>");
+        out.println("<h1>Grades</h1>");
         out.println(service.list());
         out.println("</body></html>");
     }
@@ -48,16 +49,18 @@ public class TeacherController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
         Connection conn = (Connection) req.getAttribute("conn");
-        teacherRepository = new TeacherRepositoryLogicImpl(conn);
-        service = new TeacherServiceImpl(conn);
-
-        String name = req.getParameter("name");
-        String email = req.getParameter("email");
-        Teacher teacher = Teacher.builder()
-                .name(name)
-                .email(email).build();
-        TeacherDto teacherDto = TeacherMapper.mapFrom(teacher);
-        service.update(teacherDto);
+        StudentServiceImpl studentService = new StudentServiceImpl(conn);
+        SubjectServiceImpl subjectService = new SubjectServiceImpl(conn);
+        service = new GradesServiceImpl(conn);
+        Long studentid = Long.valueOf(req.getParameter("student"));
+        Long subject = Long.valueOf(req.getParameter("subject"));
+        Double grade = Double.parseDouble(req.getParameter("grade"));
+        Grades grades = Grades.builder()
+                .student(StudentMapper.mapFrom(studentService.byId(studentid)))
+                .subject(SubjectMapper.mapFrom(subjectService.byId(subject)))
+                .grade(grade).build();
+        GradesDto gradesDto = GradesMapper.mapFrom(grades);
+        service.update(gradesDto);
         System.out.println(service.list());
 
         try (PrintWriter out = resp.getWriter()) {
@@ -71,8 +74,9 @@ public class TeacherController extends HttpServlet {
             out.println("    <body>");
             out.println("        <h1>Resultado form!</h1>");
             out.println("        <ul>");
-            out.println("            <li>Name: " + name + "</li>");
-            out.println("            <li>email: " + email + "</li>");
+            out.println("            <li>Name: " + studentid + "</li>");
+            out.println("            <li>email: " + subject + "</li>");
+            out.println("            <li>email: " + grade + "</li>");
             out.println("        </ul>");
             out.println("    </body>");
             out.println("</html>");
@@ -81,3 +85,4 @@ public class TeacherController extends HttpServlet {
     public void destroy() {
     }
 }
+
