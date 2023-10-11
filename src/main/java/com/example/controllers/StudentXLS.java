@@ -1,7 +1,6 @@
 package com.example.controllers;
 
 import com.example.domain.mapping.dto.StudentDto;
-import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
 import jakarta.servlet.*;

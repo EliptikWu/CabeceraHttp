@@ -2,21 +2,19 @@ package com.example.services.impl;
 
 import com.example.domain.mapping.dto.StudentDto;
 import com.example.reposistories.Repository;
-import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
 import com.example.services.StudentService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import lombok.NoArgsConstructor;
 
-
-import java.sql.Connection;
 import java.util.List;
 @NoArgsConstructor
+@ApplicationScoped
 public class StudentServiceImpl implements StudentService {
-
+    @Inject
+    @Named("Student")
     private Repository<StudentDto> repo;
-    public StudentServiceImpl(Connection connection) {
-        this.repo = new StudentRepositoryJdbcImpl(connection);
-    }
-
     @Override
     public List<StudentDto> list() {
         return repo.list();

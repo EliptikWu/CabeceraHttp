@@ -8,8 +8,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@page import="java.util.Map"%>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.domain.mapping.dto.StudentDto" %>
+<%@ page import="com.example.domain.mapping.dto.SubjectDto" %>
 <%
   List<String> errores = (List<String>)request.getAttribute("errores");
+%>
+<%
+  List<StudentDto> students = (List<StudentDto>)getServletContext().getAttribute("studentDtoList");
+%>
+<%
+  List<SubjectDto> subjects = (List<SubjectDto>)getServletContext().getAttribute("subjectDtoList");
 %>
 <%
   Map<String,String> errorsmap =
@@ -36,10 +44,18 @@
     <%}%>
   </ul>
   <%}%>
-  <form action="student-form" method="post">
+  <form action="grades-form" method="post">
     <div class="row mb-3">
+      <%
+        if(students != null && !students.isEmpty()){}
+      %>
       <label for="student" class="col-form-label col-sm-2">Student</label>
-      <div class="col-sm-4"><input type="text" name="student" id="student" class="form-control" value="${param.student}"></div>
+      <div class="col-sm-4"><select name="students" id="student" class="form-control">
+        <option value="">-- seleccionar --</option>
+        <% for(StudentDto student: students){%>
+        <option><%=student.name()%></><option>
+          <%}%>
+      </select></div>
       <%
         if(errorsmap != null && errorsmap.containsKey("student")){
           out.println("<div class='row mb-3 alert alert-danger col-sm-4' " +
@@ -49,7 +65,12 @@
     </div>
     <div class="row mb-3">
       <label for="subject" class="col-form-label col-sm-2">Subject</label>
-      <div class="col-sm-4"><input type="text" name="subject" id="subject" class="form-control" value="${param.subject}"></div>
+      <div class="col-sm-4"><select name="subjects" id="subject" class="form-control">
+        <option value="">-- seleccionar --</option>
+        <% for(SubjectDto subject: subjects){%>
+        <option><%=subject.name()%></><option>
+            <%}%>
+      </select></div>
       <%
         if(errorsmap != null && errorsmap.containsKey("subject")){
           out.println("<div class='row mb-3 alert alert-danger col-sm-4' " +
@@ -83,6 +104,6 @@
     </div>
   </form>
   <br/>
-  <a href="grades-form">Vamos a StudentController</a>
+  <a href="grades-form">Vamos a GradesController</a>
   </body>
   </html>

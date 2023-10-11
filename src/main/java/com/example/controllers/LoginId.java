@@ -1,13 +1,10 @@
 package com.example.controllers;
 
 import com.example.domain.mapping.dto.StudentDto;
-import com.example.domain.model.Student;
 import com.example.exceptions.UniversityException;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
-import com.example.services.impl.StudentServiceImpl;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 
 /**Private Access**/
 @WebServlet("/loginId")
@@ -23,11 +19,6 @@ public class LoginId extends HttpServlet{
 
     private StudentRepositoryLogicImpl studentRepository;
     private StudentService service;
-
-    public void Id() {
-        studentRepository = new StudentRepositoryLogicImpl();
-        service = new StudentServiceImpl((Connection) studentRepository);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException,

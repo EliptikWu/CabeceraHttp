@@ -1,15 +1,20 @@
 package com.example.controllers.mainControllers;
 
 import com.example.domain.mapping.dto.GradesDto;
+import com.example.domain.mapping.dto.StudentDto;
+import com.example.domain.mapping.dto.SubjectDto;
+import com.example.domain.mapping.dto.TeacherDto;
 import com.example.domain.mapping.mappers.GradesMapper;
 import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.mapping.mappers.SubjectMapper;
 import com.example.domain.model.Grades;
+import com.example.reposistories.Repository;
 import com.example.reposistories.impl.GradesRepositoryLogicImpl;
 import com.example.services.GradesService;
-import com.example.services.impl.GradesServiceImpl;
-import com.example.services.impl.StudentServiceImpl;
-import com.example.services.impl.SubjectServiceImpl;
+import com.example.services.StudentService;
+import com.example.services.SubjectService;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -27,17 +32,38 @@ import java.util.Map;
 /**Private Access**/
 @WebServlet(name = "GradesController", value = "/grades-form")
 public class GradesController extends HttpServlet {
+    @Inject
+    @Named("Grade")
+    Repository<GradesDto> GradeRepository;
+    @Inject
+    GradesService service;
 
-    private GradesRepositoryLogicImpl gradesRepository;
-    private GradesService service;
+    @Inject
+    StudentService studentService; ;
+    @Inject
+    SubjectService subjectService;
 
     private String message;
+
+    private SubjectDto getSubjectByName(String name) {
+        List<SubjectDto> subjects = subjectService.list();
+        return subjects.stream()
+                .filter(e->e.name().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseGet(null);
+    }
+
+    private StudentDto getStudentByName(String name) {
+        List<StudentDto> students = studentService.list();
+        return students.stream()
+                .filter(e->e.name().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseGet(null);
+    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         Connection conn = (Connection) request.getAttribute("conn");
-        gradesRepository = new GradesRepositoryLogicImpl(conn);
-        service = new GradesServiceImpl(conn);
 
         // Hello
         PrintWriter out = response.getWriter();
@@ -50,23 +76,23 @@ public class GradesController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        Connection conn = (Connection) req.getAttribute("conn");
-        StudentServiceImpl studentService = new StudentServiceImpl(conn);
-        SubjectServiceImpl subjectService = new SubjectServiceImpl(conn);
-        service = new GradesServiceImpl(conn);
-        Long studentid = Long.valueOf(req.getParameter("student"));
-        Long subject = Long.valueOf(req.getParameter("subject"));
-        Double grade = Double.parseDouble(req.getParameter("grade"));
-        Grades grades = Grades.builder()
-                .student(StudentMapper.mapFrom(studentService.byId(studentid)))
-                .subject(SubjectMapper.mapFrom(subjectService.byId(subject)))
-                .grade(grade).build();
-        GradesDto gradesDto = GradesMapper.mapFrom(grades);
-        service.update(gradesDto);
-        System.out.println(service.list());
-        //List<String> errores = getErrors( studentid, subject, grade);
-        //Map<String, String> errorsmap = getErrors2(studentid, subject,grade);
-        //if (errorsmap.isEmpty()) {
+        String studentName = req.getParameter("students");
+        System.out.println(studentName);
+        String subjectName = req.getParameter("subjects");
+        String gradeName = req.getParameter("grade");
+        Map<String, String> errorsmap = getErrors2(studentName, subjectName, gradeName);
+        if (errorsmap.isEmpty()) {
+            StudentDto studentDto = getStudentByName(studentName);
+            System.out.println(studentDto);
+            SubjectDto subjectDto = getSubjectByName(subjectName);
+            Double grade = Double.parseDouble(req.getParameter("grade"));
+            Grades grades = Grades.builder()
+                    .student(StudentMapper.mapFrom(studentDto))
+                    .subject(SubjectMapper.mapFrom(subjectDto))
+                    .grade(grade).build();
+            GradesDto gradesDto = GradesMapper.mapFrom(grades);
+            service.update(gradesDto);
+            System.out.println(service.list());
         try (PrintWriter out = resp.getWriter()) {
 
             out.println("<!DOCTYPE html>");
@@ -78,24 +104,24 @@ public class GradesController extends HttpServlet {
             out.println("    <body>");
             out.println("        <h1>Resultado form!</h1>");
             out.println("        <ul>");
-            out.println("            <li>Name: " + studentid + "</li>");
-            out.println("            <li>email: " + subject + "</li>");
+            out.println("            <li>Name: " + studentDto + "</li>");
+            out.println("            <li>email: " + subjectDto + "</li>");
             out.println("            <li>email: " + grade + "</li>");
             out.println("        </ul>");
             out.println("    </body>");
             out.println("</html>");
         }
-    }/**
+    }
      else {
-            req.setAttribute("errors", errores);
             req.setAttribute("errorsmap", errorsmap);
 
             getServletContext().getRequestDispatcher("/grades.jsp").forward(req, resp);
         }
-    private Map<String,String> getErrors2(Long studentid, Long subject, Double grade) {
+    }
+    private Map<String,String> getErrors2(String studentid, String subject, String grade) {
         Map<String,String> errors = new HashMap<>();
         if(studentid==null ||studentid.isBlank()){
-            errors.put("studentid","El studentid es requerido");
+            errors.put("student","El student es requerido");
         }
         if(subject==null ||subject.isBlank()){
             errors.put("subject","El subject es requerido");
@@ -105,19 +131,5 @@ public class GradesController extends HttpServlet {
         }
         return errors;
     }
-    private List<String> getErrors(Long studentid, Long email, Double semester)
-    {
-        List<Long> errors = new ArrayList<>();
-        if(studentid==null ||studentid.isBlank()){
-            errors.add(Long.valueOf("El studentid es requerido"));
-        }
-        if(email==null ||email.isBlank()){
-            errors.add("El email es requerido");
-        }
-        if(semester==null ||semester.isBlank()){
-            errors.add("El semester es requerido");
-        }
-        return errors;
-    }**/
 }
 

@@ -1,7 +1,5 @@
 package com.example.reposistories;
 
-import com.example.domain.mapping.dto.SubjectDto;
-
 import java.util.List;
 
 public interface Repository <T>{

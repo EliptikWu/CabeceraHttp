@@ -5,7 +5,8 @@ import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
 import com.example.services.StudentService;
-import com.example.services.impl.StudentServiceImpl;
+import com.example.services.TeacherService;
+import jakarta.inject.Inject;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,8 +26,10 @@ import java.util.Map;
 @WebServlet(name = "studentController", value = "/student-form")
 public class StudentController extends HttpServlet {
 
-    public StudentRepositoryJdbcImpl studentRepository;
-    public StudentService service;
+    @Inject
+    StudentService service;
+    @Inject
+    StudentRepositoryJdbcImpl studentRepository;
 
     private String message;
 
@@ -34,12 +37,9 @@ public class StudentController extends HttpServlet {
         message = "Students";
     }
 
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
-        Connection conn = (Connection) request.getAttribute("conn");
-        studentRepository = new StudentRepositoryJdbcImpl(conn);
-        service = new StudentServiceImpl(conn);
-
         PrintWriter out = response.getWriter();
         out.println("<html><body>");
         out.println("<h1>Students</h1>");
@@ -50,9 +50,6 @@ public class StudentController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html");
-        Connection conn = (Connection) req.getAttribute("conn");
-        studentRepository = new StudentRepositoryJdbcImpl(conn);
-        service = new StudentServiceImpl(conn);
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String semester = req.getParameter("semester");

@@ -1,5 +1,6 @@
 package com.example.reposistories.impl;
 
+import annotations.MysqlConn;
 import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.SubjectMapper;
 import com.example.domain.model.Subject;
@@ -7,28 +8,31 @@ import com.example.domain.model.Teacher;
 import com.example.exceptions.ServiceJdbcException;
 import com.example.reposistories.Repository;
 import connection.ConnectionDB;
-import lombok.NoArgsConstructor;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+@RequestScoped
+@Named("Subject")
 public class SubjectRepositoryImpl implements Repository<SubjectDto> {
+    @Inject
+    @MysqlConn
     private Connection conn;
-    public SubjectRepositoryImpl(Connection conn) {
-        this.conn = conn;
-    }
-    private Connection getConnection() throws SQLException, ClassNotFoundException {
-        return ConnectionDB.getInstance();
-    }
 
     private Subject buildObject(ResultSet resultSet) throws
             SQLException {
         Subject subject = new Subject();
-        subject.setIdSub(resultSet.getLong("idsubject"));
+        subject.setIdSub(resultSet.getLong("idSub"));
         subject.setName(resultSet.getString("name"));
+        subject.setTeacher(resultSet.getString("teacher"));
         Teacher teacher = new Teacher();
-        teacher.setIdTea(resultSet.getLong("idteacher"));
+        teacher.setIdTea(resultSet.getLong("idTea"));
         teacher.setName(resultSet.getString("name"));
+        teacher.setEmail(resultSet.getString("email"));
         subject.setTeacher(String.valueOf(teacher));
 
         return subject;
@@ -37,15 +41,15 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     @Override
     public List<SubjectDto> list() {
         List<Subject> SubjectList = new ArrayList<>();
-        try (Statement statement = getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT subject.name, teachers.name, teachers.email " +
-                     "FROM subject INNER JOIN teachers on subject.idTea=teachers.idTea;")) {
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT subject.idSub, subject.name, teacher.name AS teacher, teacher.idTea,  teacher.email " +
+                     "FROM subject INNER JOIN teacher on subject.teacher=teacher.idTea;")) {
             while (resultSet.next()) {
                 Subject Subject = buildObject(resultSet);
                 SubjectList.add(Subject);
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new ServiceJdbcException("Unable to list info");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return SubjectMapper.mapFrom(SubjectList);
     }
@@ -53,16 +57,16 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     @Override
     public SubjectDto byId(Long id) {
         Subject Subject = null;
-        try (PreparedStatement preparedStatement = getConnection()
-                .prepareStatement("SELECT subject.name, teachers.name, teachers.email FROM subject INNER JOIN " +
-                        "teachers on subject.idTea=teachers.idTea WHERE subject.idSub = ?")) {
+        try (PreparedStatement preparedStatement = conn
+                .prepareStatement("SELECT subject.name, teacher.name, teacher.email FROM subject INNER JOIN " +
+                        "teacher on subject.idTea=teacher.idTea WHERE subject.idSub = ?")) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Subject = buildObject(resultSet);
             }
             resultSet.close();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new ServiceJdbcException("Unable to search info");
         }
         return SubjectMapper.mapFrom(Subject);
@@ -76,7 +80,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
         } else {
             sql = "INSERT INTO subjects (name, idTea) VALUES(?,?)";
         }
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, Subject.name());
             stmt.setLong(2, Long.parseLong(Subject.teacher()));
 
@@ -84,7 +88,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
                 stmt.setLong(3, Subject.idSub());
             }
             stmt.executeUpdate();
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new ServiceJdbcException("Unable to save info");
 
         }
@@ -92,10 +96,10 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
 
     @Override
     public void delete(Long id) {
-        try(PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM subjects WHERE idSub =?")) {
+        try(PreparedStatement stmt = conn.prepareStatement("DELETE FROM subjects WHERE idSub =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
-        } catch (SQLException | ClassNotFoundException throwables ){
+        } catch (SQLException throwables ){
             throw new ServiceJdbcException("Unable to delete info");
         }
     }

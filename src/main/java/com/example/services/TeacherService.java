@@ -1,6 +1,5 @@
 package com.example.services;
 import com.example.domain.mapping.dto.TeacherDto;
-import com.example.domain.model.Teacher;
 
 import java.util.List;
 

@@ -1,13 +1,10 @@
 package com.example.controllers;
 
 import com.example.domain.mapping.dto.StudentDto;
-import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryLogicImpl;
 import com.example.services.StudentService;
-import com.example.services.impl.StudentServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,7 +1,6 @@
 package com.example.reposistories.impl;
 
 import com.example.domain.mapping.dto.StudentDto;
-import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.exceptions.UniversityException;

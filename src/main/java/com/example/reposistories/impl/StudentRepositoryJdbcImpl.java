@@ -1,50 +1,53 @@
 package com.example.reposistories.impl;
 
+import annotations.MysqlConn;
 import com.example.domain.mapping.dto.StudentDto;
-import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.exceptions.ServiceJdbcException;
 import com.example.reposistories.Repository;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@RequestScoped
+@Named("Student")
 public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
+    @Inject
+    @MysqlConn
     private Connection conn;
-    public StudentRepositoryJdbcImpl(Connection conn) {
-        this.conn = conn;
-    }
-
-    private Student createStudent(ResultSet rs) throws SQLException {
+    private StudentDto createStudent(ResultSet rs) throws SQLException {
         Student student = new Student();
         student.setIdStu(rs.getLong("idStu"));
         student.setName(rs.getString("name"));
         student.setEmail(rs.getString("email"));
         student.setSemester(rs.getString("semester"));
-        return student;
+        return StudentMapper.mapFrom(student);
     }
     @Override
     public List<StudentDto> list(){
-        List<Student> studentList = new ArrayList<>();
+        List<StudentDto> studentList = new ArrayList<>();
 
         try (Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * from student")) {
             while (rs.next()) {
-                Student ps= createStudent(rs);
+                StudentDto ps = createStudent(rs);
                 studentList.add(ps);
             }
         } catch (SQLException e) {
             throw new ServiceJdbcException("Unable to list info");
         }
-        return StudentMapper.mapFrom(studentList);
+        return studentList;
     }
 
 
     @Override
     public StudentDto byId(Long id) {
-        Student student = null;
+        StudentDto student = null;
         try (PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM student WHERE idStu=?")) {
             pstmt.setLong(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -55,7 +58,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
         } catch (SQLException e) {
             throw new ServiceJdbcException("Unable to find info");
         }
-        return StudentMapper.mapFrom(student);
+        return student;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class StudentRepositoryJdbcImpl implements Repository<StudentDto> {
             }
             pstmt.executeUpdate();
         } catch (SQLException throwables) {
-            throw new ServiceJdbcException("Unable to save info");
+            throwables.printStackTrace();
         }
     }
 

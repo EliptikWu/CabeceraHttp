@@ -1,8 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@page import="java.util.Map"%>
 <%@ page import="java.util.List" %>
+<%@ page import="com.example.domain.mapping.dto.SubjectDto" %>
 <%
     List<String> errores = (List<String>)request.getAttribute("errores");
+%>
+<%
+    List<SubjectDto> subjects = (List<SubjectDto>)getServletContext().getAttribute("SubjectDtoList");
 %>
 <%
     Map<String,String> errorsmap =
@@ -42,12 +46,20 @@
         %>
     </div>
     <div class="row mb-3">
-        <label for="email" class="col-form-label col-sm-2">Email</label>
-        <div class="col-sm-4"><input type="text" name="email" id="email" class="form-control" value="${param.name}"></div>
         <%
-            if(errorsmap != null && errorsmap.containsKey("email")){
+            if(subjects != null && !subjects.isEmpty()){}
+        %>
+        <label for="subject" class="col-form-label col-sm-2">Subject</label>
+        <div class="col-sm-4"><select name="subjects" id="subject" class="form-control">
+            <option value="">-- seleccionar --</option>
+            <% for(SubjectDto subject: subjects){%>
+            <option><%=subject.name()%></><option>
+                <%}%>
+        </select></div>
+        <%
+            if(errorsmap != null && errorsmap.containsKey("subject")){
                 out.println("<div class='row mb-3 alert alert-danger col-sm-4' " +
-                        "style='color: red;'>"+ errorsmap.get("email") + "</div>");
+                        "style='color: red;'>"+ errorsmap.get("subject") + "</div>");
             }
         %>
     </div>

@@ -1,21 +1,22 @@
 package com.example.services.impl;
 
 import com.example.domain.mapping.dto.SubjectDto;
-import com.example.domain.model.Subject;
 import com.example.reposistories.Repository;
-import com.example.reposistories.impl.SubjectRepositoryImpl;
 import com.example.services.SubjectService;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import lombok.NoArgsConstructor;
 
-import java.sql.Connection;
 import java.util.List;
 @NoArgsConstructor
+@ApplicationScoped
+
 public class SubjectServiceImpl implements SubjectService {
+    @Inject
+    @Named("Subject")
     private Repository<SubjectDto> repo;
 
-    public SubjectServiceImpl(Connection connection){
-        this.repo = new SubjectRepositoryImpl(connection);
-    }
     @Override
     public List<SubjectDto> list() {
         return repo.list();

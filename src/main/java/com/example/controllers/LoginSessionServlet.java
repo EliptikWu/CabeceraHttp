@@ -2,8 +2,9 @@ package com.example.controllers;
 
 import com.example.services.LoginService;
 import com.example.services.impl.LoginServiceSessionImpl;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +17,11 @@ import java.util.Optional;
 /**Private Access**/
 @WebServlet("/loginSession")
 class LoginSessionServlet extends HttpServlet{
+
+    @Inject
+    @Named("loginSession")
+    LoginService auth;
+
     final static String USERNAME = "admin";
     final static String PASSWORD = "12345";
     @Override
@@ -37,7 +43,6 @@ class LoginSessionServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws
             ServletException, IOException {
-        LoginService auth = new LoginServiceSessionImpl();
         Optional<String> usernameOptional = auth.getUsername(req);
         if (usernameOptional.isPresent()) {
             resp.setContentType("text/html;charset=UTF-8");

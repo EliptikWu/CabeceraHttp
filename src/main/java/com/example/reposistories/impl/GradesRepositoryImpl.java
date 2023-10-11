@@ -1,7 +1,7 @@
 package com.example.reposistories.impl;
 
+import annotations.MysqlConn;
 import com.example.domain.mapping.dto.GradesDto;
-import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.mappers.GradesMapper;
 import com.example.domain.model.Grades;
 import com.example.domain.model.Student;
@@ -9,21 +9,20 @@ import com.example.domain.model.Subject;
 import com.example.domain.model.Teacher;
 import com.example.reposistories.Repository;
 import connection.ConnectionDB;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@RequestScoped
+@Named("Grade")
 public class GradesRepositoryImpl implements Repository<GradesDto> {
+    @Inject
+    @MysqlConn
     private Connection conn;
-    public GradesRepositoryImpl(Connection conn) {
-        this.conn = conn;
-    }
-
-    private Connection getConnection() throws SQLException, ClassNotFoundException {
-        return ConnectionDB.getInstance();
-    }
-
 
     private Grades buildObject(ResultSet resultSet) throws SQLException {
         Grades grades = new Grades();
@@ -54,20 +53,17 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
     @Override
     public List<GradesDto> list() {
         List<Grades> gradesList = new ArrayList<>();
-        try (Statement statement = getConnection().createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT student.id_student ,student.name, student.email," +
-                     "student.semester, subject.name, teachers.name, teachers.email, grades.corte FROM" +
-                     " grades INNER JOIN student on grades.id_student=student.id_student INNER JOIN subject on " +
-                     "grades.idSub=subject.idSub inner join teachers on " +
-                     "subject.idTea=teachers.idTea;")) {
+        try (Statement statement = conn.createStatement();
+             ResultSet resultSet = statement.executeQuery("SELECT student.idStu ,student.name, student.email" +
+                     ", student.semester, subject.name, teacher.name, teacher.email " +
+                     "FROM grades INNER JOIN student ON grades.student=student.idStu INNER JOIN subject " +
+                     "ON grades.subject=subject.idSub INNER JOIN teacher ON subject.teacher=teacher.idTea;")) {
             while (resultSet.next()) {
                 Grades grades = buildObject(resultSet);
                 gradesList.add(grades);
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
         return GradesMapper.mapFrom(gradesList);
     }
@@ -75,7 +71,7 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
     @Override
     public GradesDto byId(Long id) {
         Grades grades = null;
-        try (PreparedStatement preparedStatement = getConnection()
+        try (PreparedStatement preparedStatement = conn
                 .prepareStatement("SELECT student.idStu ,student.name, student.email, " +
                         "student.semester, subject.name, teacher.name, teacher.email, grades.corte FROM grades " +
                         "INNER JOIN student on grades.idStu=student.idStu INNER JOIN subject on " +
@@ -89,8 +85,6 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
             resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
         return GradesMapper.mapFrom(grades);
     }
@@ -104,7 +98,7 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
         } else {
             sql = "INSERT INTO grades (idStu, idSub, grade) VALUES(?,?,?)";
         }
-        try (PreparedStatement stmt = getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setLong(1, grades.student().getIdStu());
             stmt.setLong(2, grades.subject().getIdSub());
 
@@ -114,20 +108,16 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void delete(Long id) {
-        try (PreparedStatement stmt = getConnection().prepareStatement("DELETE FROM grades WHERE idGra =?")) {
+        try (PreparedStatement stmt = conn.prepareStatement("DELETE FROM grades WHERE idGra =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
         }
     }
 }
