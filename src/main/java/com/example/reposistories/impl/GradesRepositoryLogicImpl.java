@@ -19,8 +19,8 @@ public class GradesRepositoryLogicImpl implements Repository<GradesDto> {
         Teacher t1 = new Teacher(1L, "Juan","1234@cue.edu.com");
         Teacher t2 = new Teacher(2L, "Pepito","1234@cue.edu.com");
 
-        Subject sub1 = new Subject(1L,"Programación 1","Juan");
-        Subject sub2 = new Subject(2L,"Programación 2", "Pepito");
+        Subject sub1 = new Subject(1L,"Programación 1", t1);
+        Subject sub2 = new Subject(2L,"Programación 2", t2);
 
         Student s1 = new Student(1L,"Li", "li@cue.edu.com", "1");
         Student s2 = new Student(2L,"Kun", "kune@cue.edu.com", "2");

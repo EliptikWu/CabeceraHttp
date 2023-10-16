@@ -28,12 +28,11 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
         Subject subject = new Subject();
         subject.setIdSub(resultSet.getLong("idSub"));
         subject.setName(resultSet.getString("name"));
-        subject.setTeacher(resultSet.getString("teacher"));
         Teacher teacher = new Teacher();
         teacher.setIdTea(resultSet.getLong("idTea"));
         teacher.setName(resultSet.getString("name"));
         teacher.setEmail(resultSet.getString("email"));
-        subject.setTeacher(String.valueOf(teacher));
+        subject.setTeacher(teacher);
 
         return subject;
     }
@@ -76,13 +75,13 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
     public void update(SubjectDto Subject) {
         String sql;
         if (Subject.idSub() != null && Subject.idSub() > 0) {
-            sql = "UPDATE subjects SET name=?, idTea=? WHERE idSub=?";
+            sql = "UPDATE subject SET name=?, teacher=? WHERE idSub=?";
         } else {
-            sql = "INSERT INTO subjects (name, idTea) VALUES(?,?)";
+            sql = "INSERT INTO subject (name, teacher) VALUES(?,?)";
         }
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, Subject.name());
-            stmt.setLong(2, Long.parseLong(Subject.teacher()));
+            stmt.setLong(2, Long.valueOf(Subject.teacher().getIdTea()));
 
             if (Subject.idSub() != null && Subject.idSub() > 0) {
                 stmt.setLong(3, Subject.idSub());
@@ -96,7 +95,7 @@ public class SubjectRepositoryImpl implements Repository<SubjectDto> {
 
     @Override
     public void delete(Long id) {
-        try(PreparedStatement stmt = conn.prepareStatement("DELETE FROM subjects WHERE idSub =?")) {
+        try(PreparedStatement stmt = conn.prepareStatement("DELETE FROM subject WHERE idSub =?")) {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException throwables ){

@@ -16,6 +16,6 @@ public class Subject implements Serializable {
 
     private Long idSub;
     private String name;
-    private String teacher;
+    private Teacher teacher;
 
 }

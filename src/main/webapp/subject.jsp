@@ -2,11 +2,12 @@
 <%@page import="java.util.Map"%>
 <%@ page import="java.util.List" %>
 <%@ page import="com.example.domain.mapping.dto.SubjectDto" %>
+<%@ page import="com.example.domain.mapping.dto.TeacherDto" %>
 <%
     List<String> errores = (List<String>)request.getAttribute("errores");
 %>
 <%
-    List<SubjectDto> subjects = (List<SubjectDto>)getServletContext().getAttribute("SubjectDtoList");
+    List<TeacherDto> teachers = (List<TeacherDto>) request.getServletContext().getAttribute("teacherDtoList");
 %>
 <%
     Map<String,String> errorsmap =
@@ -47,13 +48,13 @@
     </div>
     <div class="row mb-3">
         <%
-            if(subjects != null && !subjects.isEmpty()){}
+            if(teachers != null && !teachers.isEmpty()){}
         %>
-        <label for="subject" class="col-form-label col-sm-2">Subject</label>
-        <div class="col-sm-4"><select name="subjects" id="subject" class="form-control">
+        <label for="teacher" class="col-form-label col-sm-2">Teacher</label>
+        <div class="col-sm-4"><select name="teachers" id="teacher" class="form-control">
             <option value="">-- seleccionar --</option>
-            <% for(SubjectDto subject: subjects){%>
-            <option><%=subject.name()%></><option>
+            <% for(TeacherDto teacher: teachers){%>
+            <option><%=teacher.name()%></><option>
                 <%}%>
         </select></div>
         <%

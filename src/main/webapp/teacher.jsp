@@ -52,32 +52,6 @@
             }
         %>
     </div>
-
-    <%
-        List<TeacherDto> teachers = (List<TeacherDto>) request.getServletContext().getAttribute("teacherDtoList");
-    %>
-
-    <%
-        if(teachers != null && !teachers.isEmpty()){
-    %>
-    <ul class="alert alert-danger mx-5">
-        <% for(TeacherDto teacher: teachers){%>
-        <li><%=teacher.name()%></li>
-        <%}%>
-    </ul>
-    <%}%>
-    <div class="row mb-3">
-        <%
-            if(teachers != null && !teachers.isEmpty()){
-        %>
-        <label for="teacher" class="col-form-label col-sm-2">Profesor</label>
-        <select id="teacher" name="teachers">
-            <% for(TeacherDto var: teachers){%>
-            <option><%=var.name()%></option>
-            <%}%>
-        </select>
-
-        <%}%>
     </div>
     <div class="row mb-3">
         <label for="habilitar" class="col-form-label

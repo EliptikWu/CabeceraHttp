@@ -12,12 +12,12 @@ import java.util.List;
 public class SubjectRepositoryLogicImpl implements Repository<SubjectDto> {
     private List<Subject> subjects;
 
-    public SubjectRepositoryLogicImpl() {
-        Subject su1 = new Subject(1L,"División", "Monica");
+    /*public SubjectRepositoryLogicImpl() {
+        Subject su1 = new Subject(1L,"División", s);
         Subject su2 = new Subject(2L,"Programación", "Juan");
         Subject su3 = new Subject(3L,"Básicas", "Alex");
         subjects = new ArrayList<>(List.of(su1, su2, su3));
-    }
+    }*/
 
     @Override
     public List<SubjectDto> list() {

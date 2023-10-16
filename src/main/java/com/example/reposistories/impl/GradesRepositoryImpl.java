@@ -43,7 +43,7 @@ public class GradesRepositoryImpl implements Repository<GradesDto> {
         teacher.setIdTea(resultSet.getLong("idTea"));
         teacher.setName(resultSet.getString("name"));
         teacher.setEmail(resultSet.getString("email"));
-        subject.setTeacher(String.valueOf(teacher));
+        subject.setTeacher(teacher);
 
         grades.setSubject(subject);
 
