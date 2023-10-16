@@ -8,8 +8,6 @@ import com.example.domain.model.Student;
 import com.example.domain.model.Subject;
 import com.example.domain.model.Teacher;
 import com.example.reposistories.Repository;
-import connection.ConnectionDB;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

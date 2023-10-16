@@ -1,7 +1,6 @@
 package com.example.controllers;
 
 import com.example.services.LoginService;
-import com.example.services.impl.LoginServiceSessionImpl;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.*;

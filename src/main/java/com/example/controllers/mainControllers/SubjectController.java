@@ -1,13 +1,11 @@
 package com.example.controllers.mainControllers;
 
-import com.example.domain.mapping.dto.StudentDto;
 import com.example.domain.mapping.dto.SubjectDto;
 import com.example.domain.mapping.dto.TeacherDto;
 import com.example.domain.mapping.mappers.SubjectMapper;
 import com.example.domain.mapping.mappers.TeacherMapper;
 import com.example.domain.model.Subject;
 import com.example.reposistories.Repository;
-import com.example.reposistories.impl.SubjectRepositoryImpl;
 import com.example.services.SubjectService;
 import com.example.services.TeacherService;
 import jakarta.inject.Inject;
@@ -20,7 +18,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

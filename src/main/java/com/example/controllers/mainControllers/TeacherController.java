@@ -4,7 +4,6 @@ import com.example.domain.mapping.dto.TeacherDto;
 import com.example.domain.mapping.mappers.TeacherMapper;
 import com.example.domain.model.Teacher;
 import com.example.reposistories.Repository;
-import com.example.reposistories.impl.TeacherRepositoryLogicImpl;
 import com.example.services.TeacherService;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -16,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

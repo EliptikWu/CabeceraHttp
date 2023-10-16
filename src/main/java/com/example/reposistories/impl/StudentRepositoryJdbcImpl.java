@@ -6,7 +6,6 @@ import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.exceptions.ServiceJdbcException;
 import com.example.reposistories.Repository;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;

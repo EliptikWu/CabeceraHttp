@@ -5,7 +5,6 @@ import com.example.domain.mapping.mappers.StudentMapper;
 import com.example.domain.model.Student;
 import com.example.reposistories.impl.StudentRepositoryJdbcImpl;
 import com.example.services.StudentService;
-import com.example.services.TeacherService;
 import jakarta.inject.Inject;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;

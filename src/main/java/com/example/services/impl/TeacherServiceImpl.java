@@ -8,7 +8,6 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.NoArgsConstructor;
 
-import java.sql.Connection;
 import java.util.List;
 @NoArgsConstructor
 @ApplicationScoped
